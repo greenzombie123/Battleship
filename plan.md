@@ -13,8 +13,8 @@
     - Call `startPlacement()`
       -  if stage is `placement`,
            - create gameboard and assign to state gameBoard prop  (`makeGameBoard()`)
-           - create ships and place in ships array of gameboard (`makeShips()`)
-           - assign true to canPlace state (`setCanPlace(`)
+           - create ships and place them in playership state (`makeShips()`)
+             - Use `distributeShips()`
            - call notifyPlayer('placement') (`notifyPlayer()`)
 
 

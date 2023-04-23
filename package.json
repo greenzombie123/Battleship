@@ -4,7 +4,8 @@
   "description": "",
   "main": "script.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "watch":"jest --watchAll"
   },
   "repository": {
     "type": "git",

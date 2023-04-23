@@ -74,8 +74,7 @@ class Gameboard{
 [null, null,null,null,null,null,null,null,null,null],
 [null, null,null,null,null,null,null,null,null,null],
 ];
-        //this.playerOneShips = [];
-        //this.playerTwoShips = [];
+        
         this.ships = makeShips()
     }
 

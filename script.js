@@ -1,5 +1,3 @@
-const map = new Map()
-map.set([1,1], null)
-console.log(map.get([1,1]));
+import { init } from "./modules/Game";
 
-const g = {"battleship":[1,3]}
+const game = init()
