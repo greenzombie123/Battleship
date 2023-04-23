@@ -1,71 +1,71 @@
 import Game, { init } from "./Game";
 
 const makeShips = jest.fn();
-  makeShips.mockReturnValue([
-    {
-      name: "Carrier",
-      hasSunk: false,
-      size: 5,
-      hits: 0,
-    },
-    {
-      name: "Battleship",
-      hasSunk: false,
-      size: 4,
-      hits: 0,
-    },
-    {
-      name: "Cruiser",
-      hasSunk: false,
-      size: 3,
-      hits: 0,
-    },
-    {
-      name: "Submarine",
-      hasSunk: false,
-      size: 3,
-      hits: 0,
-    },
-    {
-      name: "Destroyer",
-      hasSunk: false,
-      size: 2,
-      hits: 0,
-    },
-  ]);
+makeShips.mockReturnValue([
+  {
+    name: "Carrier",
+    hasSunk: false,
+    size: 5,
+    hits: 0,
+  },
+  {
+    name: "Battleship",
+    hasSunk: false,
+    size: 4,
+    hits: 0,
+  },
+  {
+    name: "Cruiser",
+    hasSunk: false,
+    size: 3,
+    hits: 0,
+  },
+  {
+    name: "Submarine",
+    hasSunk: false,
+    size: 3,
+    hits: 0,
+  },
+  {
+    name: "Destroyer",
+    hasSunk: false,
+    size: 2,
+    hits: 0,
+  },
+]);
 
-  const array = [
-    {
-      name: "Carrier",
-      hasSunk: false,
-      size: 5,
-      hits: 0,
-    },
-    {
-      name: "Battleship",
-      hasSunk: false,
-      size: 4,
-      hits: 0,
-    },
-    {
-      name: "Cruiser",
-      hasSunk: false,
-      size: 3,
-      hits: 0,
-    },
-    {
-      name: "Submarine",
-      hasSunk: false,
-      size: 3,
-      hits: 0,
-    },
-    {
-      name: "Destroyer",
-      hasSunk: false,
-      size: 2,
-      hits: 0,
-    },
-  ]
+const array = [
+  {
+    name: "Carrier",
+    hasSunk: false,
+    size: 5,
+    hits: 0,
+  },
+  {
+    name: "Battleship",
+    hasSunk: false,
+    size: 4,
+    hits: 0,
+  },
+  {
+    name: "Cruiser",
+    hasSunk: false,
+    size: 3,
+    hits: 0,
+  },
+  {
+    name: "Submarine",
+    hasSunk: false,
+    size: 3,
+    hits: 0,
+  },
+  {
+    name: "Destroyer",
+    hasSunk: false,
+    size: 2,
+    hits: 0,
+  },
+];
 
 test("Return a game object", () => {
   expect(init()).toMatchObject({
@@ -249,4 +249,16 @@ test("Put ships into placeable state", () => {
   expect(game.state.placeableShips).toEqual(
     expect.arrayContaining(expectedArray)
   );
+});
+
+describe("isOffBoard function", () => {
+  const game = init();
+  test("Return false if coordinates are within the board", () => {
+    const coordinates = [1, 4];
+    expect(game.isOffBoard(coordinates)).toBe(false);
+  });
+  test("Return true if coordinates are within the board", () => {
+    const coordinates = [-1, 4];
+    expect(game.isOffBoard(coordinates)).toBe(true);
+  });
 });

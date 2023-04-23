@@ -76,24 +76,38 @@ export default class Game {
 
   placeShip() {}
 
-  getCurrentShip({state:{placeableShips}}) {
-    return placeableShips[placeableShips.length - 1]
+  getCurrentShip({ state: { placeableShips } }) {
+    return placeableShips[placeableShips.length - 1];
   }
 
   // Assigns array of 10 ships to placeableShips prop in state
-  loadPlaceableships(playerShips){
-    return [...playerShips, ...playerShips]
+  loadPlaceableships(playerShips) {
+    return [...playerShips, ...playerShips];
   }
 
-  setCurrentPlayerShips() {}
   setPlayerBoard() {}
+
   getDirection() {}
+
   changeDirection() {}
+
   setPlayerOne() {}
-  getSize() {}
-  isOffBoard() {}
+
+  isOffBoard(coordinates) {
+    if (
+      coordinates[0] >= 0 &&
+      coordinates[0] <= 7 &&
+      coordinates[1] >= 0 &&
+      coordinates[1] <= 7
+    )
+      return false;
+    return true;
+  }
+
   isOverlapping() {}
+
   placeShipParts(ship, direction, coordinates) {}
+
   startPlay() {}
 }
 
