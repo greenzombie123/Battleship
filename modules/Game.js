@@ -18,9 +18,9 @@ export default class Game {
   // User can call this during `selection` to choose their opponent
   // After that, move to 'placement' stage by calling `startPlacement`
   chooseOpponent(opponent) {
-    if(this.state.stage === 'selection')
-    this.state.opponent = this.setOpponent(opponent)
-    this.state.stage = this.setStage('placement')
+    if (this.state.stage === "selection")
+      this.state.opponent = this.setOpponent(opponent);
+    this.state.stage = this.setStage("placement");
   }
 
   setOpponent = (opponent) => {
@@ -49,9 +49,9 @@ export default class Game {
 
   makeGameBoard() {}
 
-  distributeShips(){
-    this.state.playerOneShips = this.makeShips()
-    this.state.playerTwoShips = this.makeShips()
+  distributeShips() {
+    this.state.playerOneShips = this.makeShips();
+    this.state.playerTwoShips = this.makeShips();
   }
 
   makeShips() {
@@ -64,9 +64,37 @@ export default class Game {
     ];
   }
 
-  setPlayerOne() {}
+  notifyPlayer(message) {
+    switch (message) {
+      case "placement":
+        return "Place a ship in the board";
 
-  setCanPlace() {}
+      default:
+        return null;
+    }
+  }
+
+  placeShip() {}
+
+  getCurrentShip({state:{placeableShips}}) {
+    return placeableShips[placeableShips.length - 1]
+  }
+
+  // Assigns array of 10 ships to placeableShips prop in state
+  loadPlaceableships(playerShips){
+    return [...playerShips, ...playerShips]
+  }
+
+  setCurrentPlayerShips() {}
+  setPlayerBoard() {}
+  getDirection() {}
+  changeDirection() {}
+  setPlayerOne() {}
+  getSize() {}
+  isOffBoard() {}
+  isOverlapping() {}
+  placeShipParts(ship, direction, coordinates) {}
+  startPlay() {}
 }
 
 export function init() {

@@ -5,8 +5,16 @@ export default class Ship{
     this.size = size;
     this.hits = 0;
     }
-    hit(){}
-    isSunk(){}
-    getSize(){}
-    setPosition(){}
+    
+    hit(){
+        ++this.hits
+    }
+
+    isSunk(){
+        this.hasSunk = this.hits === this.size
+    }
+    
+    getSize(){
+        return this.size
+    }
 }

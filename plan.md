@@ -27,8 +27,6 @@ function setStage(){}
 function startPlacement(){}
 function makeGameBoard(){}
 function makeShips(){}
-function setPlayerOne(){}
-function setCanPlace(){}
 function notifyPlayer(){}
 
 ```
@@ -36,7 +34,7 @@ function notifyPlayer(){}
 # Placement
 
 - After `startPlacement`, you can call `placeShip(coordinates)`
-  - If canPlace state is true
+  - If stage state is `placement`
      -   Assign last item of ships and assign to currentShip (`getCurrentShip()`)
          -   get board using state `currentPlayerBoard` prop
          -   get last item with `placeableShips` prop
@@ -55,8 +53,6 @@ function notifyPlayer(){}
         - Call `startPlay()`
           - if stage is `play`
              - Set playerboard state to `playerTwoBoard` 
-             - Set canAttack to true
-             - Set canPlace to false
 
 
 ```javascript
