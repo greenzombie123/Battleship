@@ -1,4 +1,6 @@
 import Ship from "./Ship";
+import Gameboard from "./Gameboard";
+import ShipPart from "./ShipPart";
 
 export default class Game {
   constructor() {
@@ -9,7 +11,7 @@ export default class Game {
       playerTwoShips: [],
       placeableShips: [],
       gameBoard: null,
-      playerBoard: "playerOneBoard",
+      currentPlayerBoard: "playerOneBoard",
       direction: { directions: ["right", "left", "up", "down"] },
       gameStatus: null,
     };
@@ -21,6 +23,7 @@ export default class Game {
     if (this.state.stage === "selection")
       this.state.opponent = this.setOpponent(opponent);
     this.state.stage = this.setStage("placement");
+    this.startPlacement();
   }
 
   setOpponent = (opponent) => {
@@ -45,9 +48,17 @@ export default class Game {
     }
   }
 
-  startPlacement() {}
+  startPlacement() {
+    if (this.state.stage === "placement") {
+      this.state.gameBoard = this.makeGameBoard();
+      const ships = this.makeShips();
+      this.state.placeableShips = this.loadPlaceableships(ships);
+    }
+  }
 
-  makeGameBoard() {}
+  makeGameBoard() {
+    return new Gameboard();
+  }
 
   distributeShips() {
     this.state.playerOneShips = this.makeShips();
@@ -85,11 +96,16 @@ export default class Game {
     return [...playerShips, ...playerShips];
   }
 
-  setPlayerBoard() {}
+  getCurrentPlayerBoard() {
+    return this.state.currentPlayerBoard;
+  }
 
-  getDirection() {}
-
-  changeDirection() {}
+  switchPlayerBoard() {
+    this.state.currentPlayerBoard =
+      this.state.currentPlayerBoard === "playerOneBoard"
+        ? "playerTwoBoard"
+        : "playerOneBoard";
+  }
 
   setPlayerOne() {}
 
@@ -104,9 +120,26 @@ export default class Game {
     return true;
   }
 
-  isOverlapping() {}
+  isOverlapping(playerboard, coordinates) {
+    const [y,x] = coordinates
+    if(playerboard[y][x] !== null)return true
+    return false
+  }
 
-  placeShipParts(ship, direction, coordinates) {}
+  placeShipParts(ship, direction, coordinates, gameBoard, currentPlayerboard) {
+    const { size } = ship;
+    const board = gameBoard[currentPlayerboard];
+    for (let index = 0; index < size; index++) {
+      const shipPart = new ShipPart(ship);
+      board[coordinates[0]][coordinates[1]] = shipPart;
+      coordinates = [
+        coordinates[0] + direction[0],
+        coordinates[1] + direction[1],
+      ];
+    }
+    gameBoard[currentPlayerboard] = board;
+    return gameBoard;
+  }
 
   startPlay() {}
 }

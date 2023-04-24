@@ -39,6 +39,7 @@ function notifyPlayer(){}
          -   get board using state `currentPlayerBoard` prop
          -   get last item with `placeableShips` prop
          -   return a ship
+     -   Get `playerBoard`   
      -   Get its size `getSize()`
      -   Get direction `getDirection()`
      -   Call `isOffBoard() `and `isOverlapping()`
@@ -66,7 +67,7 @@ function setPlayerOne(){}
 function getSize(){}
 function isOffBoard(){}
 function isOverlapping(){}
-function placeShipParts(ship, direction, coordinates){
+function placeShipParts(ship, direction, coordinates, gameBoard){
     Get ship size
     Check direction
     If right,

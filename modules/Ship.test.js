@@ -1,43 +1,20 @@
-test("Return ship object", () => {
-    const ships = []
-    ships.push(makeShip("Carrier", 5))
-    ships.push(makeShip("Battleship", 4))
-    ships.push(makeShip("Cruiser", 3))
-    ships.push(makeShip("Submarine", 3))
-    ships.push(makeShip("Destroyer", 2))
-    const array = [
-        {
-          name: "Carrier",
-          hasSunk: false,
-          size: 5,
-          hits: 0,
-        },
-        {
-          name: "Battleship",
-          hasSunk: false,
-          size: 4,
-          hits: 0,
-        },
-        {
-          name: "Cruiser",
-          hasSunk: false,
-          size: 3,
-          hits: 0,
-        },
-        {
-          name: "Submarine",
-          hasSunk: false,
-          size: 3,
-          hits: 0,
-        },
-        {
-          name: "Destroyer",
-          hasSunk: false,
-          size: 2,
-          hits: 0,
-        },
-      ];
-    expect(ships).toEqual(expect.arrayContaining(array));
+import Ship from "./Ship";
 
-})
+test("Increase ship's hit property to 2", () => {
+  const ship = new Ship("Battleship", 4);
+  ship.hit();
+  ship.hit();
+  expect(ship.hits).toBe(2);
+});
 
+test("Return true when function is called", () => {
+  const ship = new Ship("Battleship", 4);
+  ship.hits = 4;
+  ship.isSunk();
+  expect(ship.hasSunk).toBe(true);
+});
+
+test("Return 4", () => {
+  const ship = new Ship("Battleship", 4);
+  expect(ship.getSize()).toBe(4);
+});

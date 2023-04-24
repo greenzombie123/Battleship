@@ -27,8 +27,6 @@ export default class Gameboard {
   }
 
   receiveAttack() {}
-  makeShips() {}
-  placeShip() {}
 }
 
 export const makeGameBoard = () => new Gameboard() 

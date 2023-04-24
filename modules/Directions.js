@@ -1,14 +1,14 @@
-export default class Direction{
-    constructor(){
-        this.directions = ['right','left','up','down']
-        this.currentNumber = 0
-    }
-
-    changeDirection(number){
-        return number + 1 > 3 ? 0 : number + 1
-    }
-
-    setDirection(directions, number){
-        return directions[number]
-    }
+export default function getDirection(direction) {
+  switch (direction) {
+    case "up":
+      return [0, -1];
+    case "down":
+      return [0, 1];
+    case "right":
+      return [1, 0];
+    case "left":
+      return [-1, 0];
+    default:
+      return null;
+  }
 }

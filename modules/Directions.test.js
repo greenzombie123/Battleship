@@ -1,17 +1,20 @@
-import Direction from "./Directions";
+import getDirection from "./Directions";
 
 describe("Directions", () => {
-  test("Return 2 by passing direction.currentNumber", () => {
-    const direction = new Direction();
-    expect(direction.changeDirection(direction.currentNumber)).toBe(1);
+  test("Pass 'right' and return a [1,0]", () => {
+    const direction = getDirection("right");
+    expect(direction).toEqual(expect.arrayContaining([1, 0]));
   });
-  test("Return 0 by passing direction.currentNumber", () => {
-    const direction = new Direction();
-    direction.currentNumber = 3
-    expect(direction.changeDirection(direction.currentNumber)).toBe(0);
+  test("Pass 'down' and return a [0,1]", () => {
+    const direction = getDirection("down");
+    expect(direction).toEqual(expect.arrayContaining([0, 1]));
   });
-  test("Return 'up'", () => {
-    const direction = new Direction();
-    expect(direction.setDirection(direction.directions, 2)).toBe("up");
+  test("Pass 'up' and return a [0,-1]", () => {
+    const direction = getDirection("up");
+    expect(direction).toEqual(expect.arrayContaining([0, -1]));
+  });
+  test("Pass 'left' and return a [-1,0]", () => {
+    const direction = getDirection("left");
+    expect(direction).toEqual(expect.arrayContaining([-1, 0]));
   });
 });
