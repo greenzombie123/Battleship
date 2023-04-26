@@ -1,6 +1,6 @@
 import Ship from "./Ship";
-import Gameboard from "./Gameboard";
 import ShipPart from "./ShipPart";
+import getDirection from "./Directions";
 
 export default class Game {
   constructor() {
@@ -9,60 +9,56 @@ export default class Game {
       opponent: null,
       playerOneShips: [],
       playerTwoShips: [],
-      placeableShips: [],
-      gameBoard: null,
+      placeableShips: [...this.makeShips(), ...this.makeShips()],
+      playerOneBoard: Array.from({ length: 10 }, () =>
+        Array.from({ length: 10 }, () => null)
+      ),
+      playerTwoBoard: Array.from({ length: 10 }, () =>
+        Array.from({ length: 10 }, () => null)
+      ),
       currentPlayerBoard: "playerOneBoard",
-      direction: { directions: ["right", "left", "up", "down"] },
+      directions: { right: [1, 0], up: [0, -1], left: [-1, 0], down: [0, 1] },
+
+      currentDirection: "right",
       gameStatus: null,
     };
+  }
+
+  setState(newState) {
+    this.state = { ...this.state, ...newState };
   }
 
   // User can call this during `selection` to choose their opponent
   // After that, move to 'placement' stage by calling `startPlacement`
   chooseOpponent(opponent) {
-    if (this.state.stage === "selection")
-      this.state.opponent = this.setOpponent(opponent);
-    this.state.stage = this.setStage("placement");
-    this.startPlacement();
+    if (this.state.stage !== "selection") return;
+    this.setOpponent(opponent);
+    this.setStage("placement");
   }
 
   setOpponent = (opponent) => {
-    if (opponent === "computer") return "computer";
-    if (opponent === "human") return "human";
-    return null;
+    if (opponent === "computer") this.setState({ opponent: "computer" });
+    else if (opponent === "human") this.setState({ opponent: "human" });
   };
 
   setStage(stage) {
     switch (stage) {
       case "selection":
-        return "selection";
+        this.setState({ stage: "selection" });
+        break;
       case "placement":
-        return "placement";
+        this.setState({ stage: "placement" });
+        break;
       case "play":
-        return "play";
+        this.setState({ stage: "play" });
+        break;
       case "gameover":
-        return "gameover";
+        this.setState({ stage: "gameover" });
+        break;
 
       default:
-        return null;
+        break;
     }
-  }
-
-  startPlacement() {
-    if (this.state.stage === "placement") {
-      this.state.gameBoard = this.makeGameBoard();
-      const ships = this.makeShips();
-      this.state.placeableShips = this.loadPlaceableships(ships);
-    }
-  }
-
-  makeGameBoard() {
-    return new Gameboard();
-  }
-
-  distributeShips() {
-    this.state.playerOneShips = this.makeShips();
-    this.state.playerTwoShips = this.makeShips();
   }
 
   makeShips() {
@@ -85,29 +81,53 @@ export default class Game {
     }
   }
 
-  placeShip() {}
+  placeShip() {
+    const currentShip = this.getCurrentShip(this.state);
+  }
 
-  getCurrentShip({ state: { placeableShips } }) {
+  // Get last item from placeableShips array
+  getCurrentShip({ placeableShips }) {
     return placeableShips[placeableShips.length - 1];
   }
 
-  // Assigns array of 10 ships to placeableShips prop in state
-  loadPlaceableships(playerShips) {
-    return [...playerShips, ...playerShips];
+  reducePlaceableShips(placeableShips) {
+    placeableShips.pop();
+    this.setState({ placeableShips });
   }
 
-  getCurrentPlayerBoard() {
-    return this.state.currentPlayerBoard;
+  getCurrentPlayerBoard({ state: { currentPlayerBoard } }) {
+    return currentPlayerBoard;
   }
 
-  switchPlayerBoard() {
-    this.state.currentPlayerBoard =
-      this.state.currentPlayerBoard === "playerOneBoard"
-        ? "playerTwoBoard"
-        : "playerOneBoard";
+  switchPlayerBoard(board) {
+    const newBoard =
+      board === "playerTwoBoard" ? "playerTwoBoard" : "playerOneBoard";
+    this.setState({ currentPlayerBoard: newBoard });
   }
 
-  setPlayerOne() {}
+  changeDirection(currentDirection) {
+    switch (currentDirection) {
+      case "up":
+        this.setState({ currentDirection: "right" });
+        break;
+      case "right":
+        this.setState({ currentDirection: "down" });
+        break;
+      case "down":
+        this.setState({ currentDirection: "left" });
+        break;
+      case "left":
+        this.setState({ currentDirection: "up" });
+        break;
+      default:
+        break;
+    }
+  }
+
+  getDirection(state) {
+    const { currentDirection } = state;
+    return state.directions[currentDirection];
+  }
 
   isOffBoard(coordinates) {
     if (
@@ -121,14 +141,16 @@ export default class Game {
   }
 
   isOverlapping(playerboard, coordinates) {
-    const [y,x] = coordinates
-    if(playerboard[y][x] !== null)return true
-    return false
+    const [y, x] = coordinates;
+    if (playerboard[y][x] !== null) return true;
+    return false;
   }
 
-  placeShipParts(ship, direction, coordinates, gameBoard, currentPlayerboard) {
+  placeShipParts(ship, direction, coordinates, game) {
+    const { state } = game;
     const { size } = ship;
-    const board = gameBoard[currentPlayerboard];
+    const { currentPlayerBoard } = state;
+    const board = state[currentPlayerBoard];
     for (let index = 0; index < size; index++) {
       const shipPart = new ShipPart(ship);
       board[coordinates[0]][coordinates[1]] = shipPart;
@@ -137,8 +159,8 @@ export default class Game {
         coordinates[1] + direction[1],
       ];
     }
-    gameBoard[currentPlayerboard] = board;
-    return gameBoard;
+    state[currentPlayerBoard] = board;
+    this.setState({ state });
   }
 
   startPlay() {}
