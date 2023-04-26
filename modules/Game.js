@@ -1,6 +1,6 @@
 import Ship from "./Ship";
 import ShipPart from "./ShipPart";
-import getDirection from "./Directions";
+import { checkArray } from "./helper";
 
 export default class Game {
   constructor() {
@@ -9,6 +9,7 @@ export default class Game {
       opponent: null,
       playerOneShips: [],
       playerTwoShips: [],
+      currentPlayerShips: "playerOneShips",
       placeableShips: [...this.makeShips(), ...this.makeShips()],
       playerOneBoard: Array.from({ length: 10 }, () =>
         Array.from({ length: 10 }, () => null)
@@ -81,8 +82,55 @@ export default class Game {
     }
   }
 
-  placeShip() {
-    const currentShip = this.getCurrentShip(this.state);
+  placeShip(coordinates) {
+    const {
+      placeableShips
+    } = this.state;
+
+    const shouldPlaceShip = this.canPlaceShip(coordinates, this.state);
+    if (!shouldPlaceShip) return;
+
+    const currentShip = this.getCurrentShip(placeableShips);
+
+    this.placeShipParts(
+      currentShip,
+      this.getDirection(this.state),
+      coordinates,
+      this.state
+    );
+
+    this.insertPlayerShips(this.state);
+
+    if (this.canStartGame(placeableShips)) this.startGame();
+  }
+
+  canPlaceShip(coordinates, state) {
+    const { currentPlayerBoard, stage } = state;
+    if (stage !== "placement") return false;
+    if (this.isOffBoard(coordinates)) return false;
+    if (this.isOverlapping(this.state[currentPlayerBoard])) return false;
+    return true;
+  }
+
+  canStartGame(placeableShips){
+    return placeableShips.length === 0
+  }
+
+  startGame(){
+    this.setStage("play")
+  }
+
+  insertPlayerShips(state) {
+    const { placeableShips } = state;
+    if (placeableShips.length > 5) {
+      const { playerOneShips } = state;
+      playerOneShips.push(placeableShips.pop());
+      this.setState({ playerOneShips });
+      return;
+    }
+    const { playerTwoShips } = state;
+    playerTwoShips.push(placeableShips.pop());
+    this.setState({ playerTwoShips });
   }
 
   // Get last item from placeableShips array
@@ -132,22 +180,21 @@ export default class Game {
   isOffBoard(coordinates) {
     if (
       coordinates[0] >= 0 &&
-      coordinates[0] <= 7 &&
+      coordinates[0] <= 9 &&
       coordinates[1] >= 0 &&
-      coordinates[1] <= 7
+      coordinates[1] <= 9
     )
       return false;
     return true;
   }
 
   isOverlapping(playerboard, coordinates) {
-    const [y, x] = coordinates;
-    if (playerboard[y][x] !== null) return true;
+    const [x, y] = coordinates;
+    if (playerboard[x][y] !== null) return true;
     return false;
   }
 
-  placeShipParts(ship, direction, coordinates, game) {
-    const { state } = game;
+  placeShipParts(ship, direction, coordinates, state) {
     const { size } = ship;
     const { currentPlayerBoard } = state;
     const board = state[currentPlayerBoard];

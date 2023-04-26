@@ -106,7 +106,7 @@ test("placeableSHips should have 10 ships", () => {
 
 test("Set opponent state prop to 'human' ", () => {
   const game = init();
-  game.setOpponent("human")
+  game.setOpponent("human");
   expect(game.state.opponent).toBe("human");
 });
 
@@ -149,7 +149,7 @@ test("Return array of 5 ship objecs", () => {
 
 test(`Set stage to "placement"`, () => {
   const game = init();
-  game.setStage("placement")
+  game.setStage("placement");
   expect(game.state.stage).toBe("placement");
 });
 
@@ -157,7 +157,7 @@ describe("Test chooseOpponent method", () => {
   test("Update opponent and stage state", () => {
     const game = init();
     game.chooseOpponent("human");
-    expect(game.state.opponent).toBe('human');
+    expect(game.state.opponent).toBe("human");
     expect(game.state.stage).toBe("placement");
   });
 
@@ -237,7 +237,7 @@ test("Return the gameboard with a shippart in [0,1] for player one", () => {
   const c = [0, 1];
   const direction = [1, 0];
   expected.state.playerOneBoard[0][1] = new ShipPart(ship);
-  game.placeShipParts(ship, direction, c, game);
+  game.placeShipParts(ship, direction, c, game.state);
   expect(game.state.playerOneBoard).toEqual(expected.state.playerOneBoard);
 });
 
@@ -248,7 +248,7 @@ test("Return the gameboard with a shippart in [4,7] for player one", () => {
   const c = [4, 7];
   const direction = [1, 0];
   expected.state.playerOneBoard[4][7] = new ShipPart(ship);
-  game.placeShipParts(ship, direction, c, game);
+  game.placeShipParts(ship, direction, c, game.state);
   expect(game.state.playerOneBoard).toEqual(expected.state.playerOneBoard);
 });
 
@@ -261,7 +261,7 @@ test("Return the gameboard with three shipparts in [0,1], [0,2], and [0,3] for p
   expected.state.playerOneBoard[0][1] = new ShipPart(ship);
   expected.state.playerOneBoard[0][2] = new ShipPart(ship);
   expected.state.playerOneBoard[0][3] = new ShipPart(ship);
-  game.placeShipParts(ship, direction, c, game);
+  game.placeShipParts(ship, direction, c, game.state);
   expect(game.state.playerOneBoard).toEqual(expected.state.playerOneBoard);
 });
 
@@ -274,7 +274,7 @@ test("Return the gameboard with three shipparts in [5,7], [6,7], and [7,7] for p
   expected.state.playerOneBoard[5][7] = new ShipPart(ship);
   expected.state.playerOneBoard[6][7] = new ShipPart(ship);
   expected.state.playerOneBoard[7][7] = new ShipPart(ship);
-  game.placeShipParts(ship, direction, c, game);
+  game.placeShipParts(ship, direction, c, game.state);
   expect(game.state.playerOneBoard).toEqual(expected.state.playerOneBoard);
 });
 
@@ -287,7 +287,7 @@ test("Return the gameboard with three shipparts in [7,7], [7,6], and [7,5] for p
   expected.state.playerOneBoard[7][7] = new ShipPart(ship);
   expected.state.playerOneBoard[7][6] = new ShipPart(ship);
   expected.state.playerOneBoard[7][5] = new ShipPart(ship);
-  game.placeShipParts(ship, direction, c, game);
+  game.placeShipParts(ship, direction, c, game.state);
   expect(game.state.playerOneBoard).toEqual(expected.state.playerOneBoard);
 });
 
@@ -300,14 +300,49 @@ test("Remove a ship after placing its ship parts", () => {
 
 describe("Directions", () => {
   test("Change currentDirection to 'down'", () => {
-    const game = init()
+    const game = init();
     game.changeDirection("right");
-    expect(game.state.currentDirection).toEqual('down');
+    expect(game.state.currentDirection).toEqual("down");
   });
 
   test("Return [0,1]", () => {
-    const game = init()
+    const game = init();
     const direction = game.getDirection(game.state);
-    expect(direction).toEqual(([1, 0]));
+    expect(direction).toEqual([1, 0]);
+  });
+});
+
+describe("insertPlayerShips", () => {
+  test("Put ships into playerOneShips state prop if their are more than 5 ships in placeableShips prop", () => {
+    const game = init();
+    game.state.placeableShips = [5, 4, 3, 2, 1, 5, 4, 3, 2, 1];
+    game.insertPlayerShips(game.state);
+    expect(game.state.playerOneShips).toEqual([1]);
+  });
+
+  test("Put ships into playerTwoShips state prop if their are more than 5 ships in placeableShips prop", () => {
+    const game = init();
+    game.state.placeableShips = [5, 4, 3, 2];
+    game.insertPlayerShips(game.state);
+    expect(game.state.playerTwoShips).toEqual([2]);
+  });
+});
+
+describe("canPlaceShip", () => {
+  test("Return false if the stage is not placement", () => {
+    const game = init();
+    game.state.stage = "play";
+    const shouldPlaceShip = game.canPlaceShip([1, 1], game.state);
+    expect(shouldPlaceShip).toBe(false);
+  });
+});
+
+describe("canStartGame", () => {
+  test("Return true if placeableShips is empty", () => {
+    const game = init();
+    let { placeShipParts } = game.state.placeableShips;
+    placeShipParts = [];
+    const shouldStartGame = game.canStartGame(placeShipParts);
+    expect(shouldStartGame).toBe(true);
   });
 });
