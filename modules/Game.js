@@ -219,10 +219,16 @@ export default class Game {
     return shipPart.wasHit;
   }
 
-  wasMiss(state, coordinates) {
+  wasPreviousMiss(state, coordinates) {
     const { currentPlayerBoard } = state;
     const [y, x] = coordinates;
     return state[currentPlayerBoard][y][x] === "M";
+  }
+
+  wasMiss(state, coordinates) {
+    const { currentPlayerBoard } = state;
+    const [y, x] = coordinates;
+    return state[currentPlayerBoard][y][x] === null;
   }
 
   getShipPart(state, coordinates) {
@@ -241,14 +247,19 @@ export default class Game {
     ship.hit();
   }
 
-  removeSunkShips(state, ships) {
+  removeSunkShips(state) {
     const { currentPlayerBoard } = state;
-    const playerShips = [...ships];
-    const remainingShips = playerShips.filter((ship) => !ship.hasSunk);
-    if (currentPlayerBoard === "playerOneBoard")
+    if (currentPlayerBoard === "playerOneBoard") {
+      const { playerOneShips } = state;
+      const playerShips = [...playerOneShips];
+      const remainingShips = playerShips.filter((ship) => !ship.hasSunk);
       this.setState({ playerOneShips: remainingShips });
-    if (currentPlayerBoard === "playerTwoBoard")
+    } else if (currentPlayerBoard === "playerTwoBoard") {
+      const { playerTwoShips } = state;
+      const playerShips = [...playerTwoShips];
+      const remainingShips = playerShips.filter((ship) => !ship.hasSunk);
       this.setState({ playerTwoShips: remainingShips });
+    }
   }
 
   checkWinner(state) {
@@ -257,14 +268,47 @@ export default class Game {
       currentPlayerBoard === "playerTwoBoard"
         ? "playerTwoShips"
         : "playerOneShips";
-    console.log(currentPlayerBoard);
     return state[playerShips].length === 0;
   }
 
   setGameStatus(state) {
     const { playerOneShips, playerTwoShips } = state;
-    if(playerOneShips.length === 0) this.setState({gameStatus:"Player One is Winner"})
-    if(playerTwoShips.length === 0) this.setState({gameStatus:"Player Two is Winner"})
+    if (playerOneShips.length === 0)
+      this.setState({ gameStatus: "Player One is Winner" });
+    if (playerTwoShips.length === 0)
+      this.setState({ gameStatus: "Player Two is Winner" });
+  }
+
+  validateAttack(coordinates, state) {
+    if (!this.isStagePlay(state.stage)) return false;
+    if (this.isOffBoard(coordinates)) return false;
+    if (this.wasPreviousMiss(state, coordinates)) return false;
+    return true;
+  }
+
+  setWinner() {
+    this.setStage("gameover");
+    this.setGameStatus(this.state);
+  }
+
+  makeAttack(coordinates) {
+    const { state } = this;
+    const canAttack = this.validateAttack(coordinates, state);
+    if (!canAttack) return;
+    const shipPart = this.getShipPart(state, coordinates);
+    const isMiss = this.wasMiss(state, coordinates);
+    if (isMiss) {
+      this.missTarget(state, coordinates);
+      this.switchPlayerBoard(state);
+      return;
+    }
+    const wasHit = this.confirmWasHit(shipPart);
+    if (wasHit) return;
+    shipPart.hit();
+    this.removeSunkShips(state);
+    this.switchPlayerBoard(state);
+    const isWinner = this.checkWinner(state);
+    if (isWinner) this.setWinner();
   }
 }
 

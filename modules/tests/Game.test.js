@@ -365,10 +365,19 @@ describe("confirmWasHit", () => {
   });
 });
 
-describe("wasMiss", () => {
+describe("wasPreviousMiss", () => {
   test("Check if item in the playerboard is a 'M' string", () => {
     const game = init();
     game.state.playerOneBoard[0][0] = "M";
+    const MissedOrHit = game.wasPreviousMiss(game.state, [0, 0]);
+    expect(MissedOrHit).toBe(true);
+  });
+});
+
+describe("wasMiss", () => {
+  test("Check if coordinates point to a null", () => {
+    const game = init();
+    game.state.playerOneBoard[0][0] = null;
     const MissedOrHit = game.wasMiss(game.state, [0, 0]);
     expect(MissedOrHit).toBe(true);
   });
@@ -430,7 +439,7 @@ describe("removeSunkShips", () => {
       { hasSunk: false },
       { hasSunk: false },
     ];
-    game.removeSunkShips(game.state, game.state.playerOneShips);
+    game.removeSunkShips(game.state, game.state);
     expect(game.state.playerOneShips).toEqual([
       { hasSunk: false },
       { hasSunk: false },
@@ -474,17 +483,31 @@ describe("setGameStatus", () => {
   });
 });
 
-// describe("", ()=>{
-//   test("", ()=>{
-//     expect()
-//   })
-// })
+describe("validateAttack", ()=>{
+  test("Return true if stage is 'play' and coordinates are within the board", ()=>{
+    const game = init()
+    game.state.stage = 'play';
+    const isAttackValid = game.validateAttack([1,1], game.state)
+    expect(isAttackValid).toBe(true)
+  })
 
-// describe("", ()=>{
-//   test("", ()=>{
-//     expect()
-//   })
-// })
+  test("Return false if stage is 'play' but coordinates are not within the board", ()=>{
+    const game = init()
+    game.state.stage = 'play';
+    const isAttackValid = game.validateAttack([1,10], game.state)
+    expect(isAttackValid).toBe(false)
+  })
+})
+
+describe("makeAttack", ()=>{
+  test("Miss a target on the board", ()=>{
+    const game = init()
+    game.state.stage = 'play'
+    game.makeAttack([1,1])
+    const {playerOneBoard} = game.state
+    expect(playerOneBoard[1][1]).toBe("M")
+  })
+})
 
 // describe("", ()=>{
 //   test("", ()=>{
