@@ -16,7 +16,7 @@ export default class Game {
         Array.from({ length: 10 }, () => null)
       ),
       currentPlayerBoard: "playerOneBoard",
-      directions: { right: [1, 0], up: [0, -1], left: [-1, 0], down: [0, 1] },
+      directions: { right: [0, 1], up: [-1, 0], left: [0, -1], down: [1, 0] },
 
       currentDirection: "right",
       gameStatus: null,
@@ -98,6 +98,29 @@ export default class Game {
     this.insertPlayerShips(this.state);
 
     if (this.canStartGame(placeableShips)) this.startGame();
+  }
+
+  getAllShipCoordinates(ship, direction, coordinates, state) {
+    const { size } = ship;
+    const { currentPlayerBoard } = state;
+    const board = state[currentPlayerBoard];
+    const coorArray = [];
+    for (let index = 0; index < size; index++) {
+      coorArray.push(coordinates);
+      coordinates = [
+        coordinates[0] + direction[0],
+        coordinates[1] + direction[1],
+      ];
+    }
+    return coorArray;
+  }
+
+  validateCoordinates(coordinates, state) {
+    const { currentPlayerBoard } = state;
+    const board = state[currentPlayerBoard];
+    return coordinates.every(
+      (coor) => !this.isOffBoard(coor) && !this.isOverlapping(board, coor)
+    );
   }
 
   canPlaceShip(coordinates, state) {
@@ -189,23 +212,26 @@ export default class Game {
   }
 
   isOverlapping(playerboard, coordinates) {
-    const [x, y] = coordinates;
-    if (playerboard[x][y] !== null) return true;
+    const [y, x] = coordinates;
+    if (playerboard[y][x] !== null) return true;
     return false;
   }
 
-  placeShipParts(ship, direction, coordinates, state) {
+  placeShipParts(ship, coordinates, state) {
     const { size } = ship;
     const { currentPlayerBoard } = state;
     const board = state[currentPlayerBoard];
-    for (let index = 0; index < size; index++) {
-      const shipPart = new ShipPart(ship);
-      board[coordinates[0]][coordinates[1]] = shipPart;
-      coordinates = [
-        coordinates[0] + direction[0],
-        coordinates[1] + direction[1],
-      ];
-    }
+    coordinates.forEach((coor) => {
+      board[coor[0]][coor[1]] = new ShipPart(ship);
+    });
+    // for (let index = 0; index < size; index++) {
+    //   const shipPart = new ShipPart(ship);
+    //   board[coordinates[0]][coordinates[1]] = shipPart;
+    //   coordinates = [
+    //     coordinates[0] + direction[0],
+    //     coordinates[1] + direction[1],
+    //   ];
+    // }
     state[currentPlayerBoard] = board;
     this.setState({ state });
   }

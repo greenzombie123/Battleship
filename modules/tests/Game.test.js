@@ -226,30 +226,30 @@ test("Set curentPlayerboard state prop to playerTwoBoard", () => {
 
 test("Set curentPlayerboard state prop to playerOneBoard", () => {
   let game = init();
-  game.state.currentPlayerBoard = "playerTwoBoard"
+  game.state.currentPlayerBoard = "playerTwoBoard";
   game.switchPlayerBoard(game.state);
   expect(game.state.currentPlayerBoard).toBe("playerOneBoard");
 });
 
-test("Return the gameboard with a shippart in [0,1] for player one", () => {
+test("Return the gameboard with a shippart in [1,0] for player one", () => {
   const game = init();
   const expected = init();
   const ship = { size: 1 };
-  const c = [0, 1];
-  const direction = [1, 0];
-  expected.state.playerOneBoard[0][1] = new ShipPart(ship);
-  game.placeShipParts(ship, direction, c, game.state);
-  expect(game.state.playerOneBoard).toEqual(expected.state.playerOneBoard);
+  const c = [[1, 0]];
+  expected.state.playerOneBoard[1][0] = new ShipPart(ship);
+  game.placeShipParts(ship, c, game.state);
+  expect(game.state.playerOneBoard[1][0]).toEqual(
+    expected.state.playerOneBoard[1][0]
+  );
 });
 
 test("Return the gameboard with a shippart in [4,7] for player one", () => {
   const game = init();
   const expected = init();
   const ship = { size: 1 };
-  const c = [4, 7];
-  const direction = [1, 0];
+  const c = [[4, 7]];
   expected.state.playerOneBoard[4][7] = new ShipPart(ship);
-  game.placeShipParts(ship, direction, c, game.state);
+  game.placeShipParts(ship, c, game.state);
   expect(game.state.playerOneBoard).toEqual(expected.state.playerOneBoard);
 });
 
@@ -257,12 +257,15 @@ test("Return the gameboard with three shipparts in [0,1], [0,2], and [0,3] for p
   const game = init();
   const expected = init();
   const ship = { size: 3 };
-  const c = [0, 1];
-  const direction = [0, 1];
+  const c = [
+    [0, 1],
+    [0, 2],
+    [0, 3],
+  ];
   expected.state.playerOneBoard[0][1] = new ShipPart(ship);
   expected.state.playerOneBoard[0][2] = new ShipPart(ship);
   expected.state.playerOneBoard[0][3] = new ShipPart(ship);
-  game.placeShipParts(ship, direction, c, game.state);
+  game.placeShipParts(ship, c, game.state);
   expect(game.state.playerOneBoard).toEqual(expected.state.playerOneBoard);
 });
 
@@ -270,12 +273,15 @@ test("Return the gameboard with three shipparts in [5,7], [6,7], and [7,7] for p
   const game = init();
   const expected = init();
   const ship = { size: 3 };
-  const c = [5, 7];
-  const direction = [1, 0];
+  const c = [
+    [5, 7],
+    [6, 7],
+    [7, 7],
+  ];
   expected.state.playerOneBoard[5][7] = new ShipPart(ship);
   expected.state.playerOneBoard[6][7] = new ShipPart(ship);
   expected.state.playerOneBoard[7][7] = new ShipPart(ship);
-  game.placeShipParts(ship, direction, c, game.state);
+  game.placeShipParts(ship, c, game.state);
   expect(game.state.playerOneBoard).toEqual(expected.state.playerOneBoard);
 });
 
@@ -283,12 +289,11 @@ test("Return the gameboard with three shipparts in [7,7], [7,6], and [7,5] for p
   const game = init();
   const expected = init();
   const ship = { size: 3 };
-  const c = [7, 7];
-  const direction = [0, -1];
+  const c = [[7, 7], [7, 6],[7, 5]];
   expected.state.playerOneBoard[7][7] = new ShipPart(ship);
   expected.state.playerOneBoard[7][6] = new ShipPart(ship);
   expected.state.playerOneBoard[7][5] = new ShipPart(ship);
-  game.placeShipParts(ship, direction, c, game.state);
+  game.placeShipParts(ship, c, game.state);
   expect(game.state.playerOneBoard).toEqual(expected.state.playerOneBoard);
 });
 
@@ -309,7 +314,7 @@ describe("Directions", () => {
   test("Return [0,1]", () => {
     const game = init();
     const direction = game.getDirection(game.state);
-    expect(direction).toEqual([1, 0]);
+    expect(direction).toEqual([0, 1]);
   });
 });
 
@@ -450,7 +455,7 @@ describe("removeSunkShips", () => {
 describe("checkWinner", () => {
   test("Return true if opposing player's ships array is empty", () => {
     const game = init();
-    game.switchPlayerBoard(game.state)
+    game.switchPlayerBoard(game.state);
     game.state.playerTwoShips = [];
     const isPlayerOneWinner = game.checkWinner(game.state);
     expect(isPlayerOneWinner).toBe(true);
@@ -458,7 +463,7 @@ describe("checkWinner", () => {
 
   test("Return false if opposing player's ships array is empty", () => {
     const game = init();
-    game.switchPlayerBoard(game.state)
+    game.switchPlayerBoard(game.state);
     game.state.playerTwoShips = [1];
     const isPlayerOneWinner = game.checkWinner(game.state);
     expect(isPlayerOneWinner).toBe(false);
@@ -483,31 +488,100 @@ describe("setGameStatus", () => {
   });
 });
 
-describe("validateAttack", ()=>{
-  test("Return true if stage is 'play' and coordinates are within the board", ()=>{
-    const game = init()
-    game.state.stage = 'play';
-    const isAttackValid = game.validateAttack([1,1], game.state)
-    expect(isAttackValid).toBe(true)
-  })
+describe("validateAttack", () => {
+  test("Return true if stage is 'play' and coordinates are within the board", () => {
+    const game = init();
+    game.state.stage = "play";
+    const isAttackValid = game.validateAttack([1, 1], game.state);
+    expect(isAttackValid).toBe(true);
+  });
 
-  test("Return false if stage is 'play' but coordinates are not within the board", ()=>{
-    const game = init()
-    game.state.stage = 'play';
-    const isAttackValid = game.validateAttack([1,10], game.state)
-    expect(isAttackValid).toBe(false)
-  })
-})
+  test("Return false if stage is 'play' but coordinates are not within the board", () => {
+    const game = init();
+    game.state.stage = "play";
+    const isAttackValid = game.validateAttack([1, 10], game.state);
+    expect(isAttackValid).toBe(false);
+  });
+});
 
-describe("makeAttack", ()=>{
-  test("Miss a target on the board", ()=>{
-    const game = init()
-    game.state.stage = 'play'
-    game.makeAttack([1,1])
-    const {playerOneBoard} = game.state
-    expect(playerOneBoard[1][1]).toBe("M")
-  })
-})
+describe("makeAttack", () => {
+  test("Miss a target on the board", () => {
+    const game = init();
+    game.state.stage = "play";
+    game.makeAttack([1, 1]);
+    const { playerOneBoard } = game.state;
+    expect(playerOneBoard[1][1]).toBe("M");
+  });
+});
+
+describe("getAllShipsCoordinates", () => {
+  test("get coordinates of each part of the ship", () => {
+    const game = init();
+    const ships = [
+      {
+        name: "Cruiser",
+        hasSunk: false,
+        size: 3,
+        hits: 0,
+      },
+    ];
+    const direction = [1, 0];
+    const coordinates = game.getAllShipCoordinates(
+      ships[0],
+      direction,
+      [1, 0],
+      game.state
+    );
+    expect(coordinates).toEqual([
+      [1, 0],
+      [2, 0],
+      [3, 0],
+    ]);
+  });
+});
+
+describe("validateCoordinates", () => {
+  test("Return true if all coordinates are not overlapping nor out of board", () => {
+    const game = init();
+    // const ships = [
+    //   {
+    //     name: "Cruiser",
+    //     hasSunk: false,
+    //     size: 3,
+    //     hits: 0,
+    //   },
+    // ];
+    const areCoordinatesValid = game.validateCoordinates(
+      [
+        [1, 0],
+        [2, 0],
+        [3, 0],
+      ],
+      game.state
+    );
+    expect(areCoordinatesValid).toBe(true);
+  });
+
+  test("Return false if one of the all coordinates is overlapping.", () => {
+    const game = init();
+    game.state.playerOneBoard[2][0] = "Yo";
+    const areCoordinatesValid = game.validateCoordinates(
+      [
+        [1, 0],
+        [2, 0],
+        [3, 0],
+      ],
+      game.state
+    );
+    expect(areCoordinatesValid).toBe(false);
+  });
+});
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
 
 // describe("", ()=>{
 //   test("", ()=>{
