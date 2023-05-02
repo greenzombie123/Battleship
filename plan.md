@@ -84,6 +84,38 @@ function startPlay(){
 
 - After calling `startPlay()`, can call `receiveAttack()`
 
+function recieveAttack(coordinates){
+    Check if 
+        stage is not play
+        coordinates is out of board
+        tile was already attacked
+    If not, continue
+
+    get item from board that matches coordinates
+
+    if tile has nothing
+        if so, add miss to tile
+
+    Check if shipPart was already hit
+
+    
+    if tile has ship
+        call hit method of shippart
+            change wasHit to true
+            call hit method of ship
+                increase hit by one
+                check if hit is equal to size of ship
+                    if so, add true to isSunk
+    switchPlayerBoard
+    removeSunkships
+    check if there is winner
+        setWinner
+            set stage to gameover
+            set game status to the winner
+
+
+}
+
 
 ```javascript
 function receiveAttack(coordinates){

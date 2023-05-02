@@ -1,4 +1,4 @@
-import Ship from "./Ship";
+import Ship from "../Ship";
 
 test("Increase ship's hit property to 2", () => {
   const ship = new Ship("Battleship", 4);
@@ -9,8 +9,10 @@ test("Increase ship's hit property to 2", () => {
 
 test("Return true when function is called", () => {
   const ship = new Ship("Battleship", 4);
-  ship.hits = 4;
-  ship.isSunk();
+  ship.hit();
+  ship.hit();
+  ship.hit();
+  ship.hit();
   expect(ship.hasSunk).toBe(true);
 });
 

@@ -1,9 +1,9 @@
-import Game, { init } from "./Game";
-import ShipPart from "./ShipPart";
-import Ship from "./Ship";
+import Game, { init } from "../Game";
+import ShipPart from "../ShipPart";
+import Ship from "../Ship";
 
 beforeEach(() => {
-  jest.resetModules();
+  // jest.resetModules();
 });
 
 const makeShips = jest.fn();
@@ -220,13 +220,14 @@ test("Get playerOneBoard string from currentPlayerBoard state prop", () => {
 
 test("Set curentPlayerboard state prop to playerTwoBoard", () => {
   const game = init();
-  game.switchPlayerBoard("playerTwoBoard");
+  game.switchPlayerBoard(game.state);
   expect(game.state.currentPlayerBoard).toBe("playerTwoBoard");
 });
 
 test("Set curentPlayerboard state prop to playerOneBoard", () => {
   let game = init();
-  game.switchPlayerBoard("playerOneBoard");
+  game.state.currentPlayerBoard = "playerTwoBoard"
+  game.switchPlayerBoard(game.state);
   expect(game.state.currentPlayerBoard).toBe("playerOneBoard");
 });
 
@@ -346,3 +347,147 @@ describe("canStartGame", () => {
     expect(shouldStartGame).toBe(true);
   });
 });
+
+describe("isStagePlay", () => {
+  test("return true if stage is play", () => {
+    const game = init();
+    game.state.stage = "play";
+    expect(game.isStagePlay(game.state.stage)).toBe(true);
+  });
+});
+
+describe("confirmWasHit", () => {
+  test("Check if shipPart was already hit. Return true if was", () => {
+    const game = init();
+    const shipPart = { wasHit: true };
+    const wasHit = game.confirmWasHit(shipPart);
+    expect(wasHit).toBe(true);
+  });
+});
+
+describe("wasMiss", () => {
+  test("Check if item in the playerboard is a 'M' string", () => {
+    const game = init();
+    game.state.playerOneBoard[0][0] = "M";
+    const MissedOrHit = game.wasMiss(game.state, [0, 0]);
+    expect(MissedOrHit).toBe(true);
+  });
+});
+
+describe("getShipPart", () => {
+  test("return a ship part object from the playerBoard", () => {
+    const game = init();
+    game.state.playerOneBoard[0][0] = new ShipPart({ name: "boat" });
+    const shippart = game.getShipPart(game.state, [0, 0]);
+    expect(shippart).toBeInstanceOf(ShipPart);
+  });
+
+  test("return null from the playerBoard if there is no ship part", () => {
+    const game = init();
+    game.state.playerOneBoard[0][0] = null;
+    const shippart = game.getShipPart(game.state, [0, 0]);
+    expect(shippart).toBe(null);
+  });
+});
+
+describe("missTarget", () => {
+  test("Assign 'M' to playerBoard if argument is null", () => {
+    const game = init();
+    game.missTarget(game.state, [0, 0]);
+    expect(game.state.playerOneBoard[0][0]).toBe("M");
+  });
+});
+
+describe("hitTarget", () => {
+  test("Call ship part hit and increase ship hit property to 1 and ship part wasHit to return true", () => {
+    const game = init();
+    const mockShip = {
+      hits: 0,
+      hit() {
+        ++this.hits;
+      },
+    };
+    const shipPart = {
+      wasHit: false,
+      ship: mockShip,
+      hit() {
+        if (!this.wasHit) this.wasHit = true;
+        this.ship.hit();
+      },
+    };
+    game.state.playerOneBoard[1][1] = shipPart;
+    game.hitTarget(shipPart);
+    expect(mockShip.hits).toBe(1);
+    expect(shipPart.wasHit).toBe(true);
+  });
+});
+
+describe("removeSunkShips", () => {
+  test("Remove a ship whose wasSunk prop is true", () => {
+    const game = init();
+    game.state.playerOneShips = [
+      { hasSunk: true },
+      { hasSunk: false },
+      { hasSunk: false },
+    ];
+    game.removeSunkShips(game.state, game.state.playerOneShips);
+    expect(game.state.playerOneShips).toEqual([
+      { hasSunk: false },
+      { hasSunk: false },
+    ]);
+  });
+});
+
+describe("checkWinner", () => {
+  test("Return true if opposing player's ships array is empty", () => {
+    const game = init();
+    game.switchPlayerBoard(game.state)
+    game.state.playerTwoShips = [];
+    const isPlayerOneWinner = game.checkWinner(game.state);
+    expect(isPlayerOneWinner).toBe(true);
+  });
+
+  test("Return false if opposing player's ships array is empty", () => {
+    const game = init();
+    game.switchPlayerBoard(game.state)
+    game.state.playerTwoShips = [1];
+    const isPlayerOneWinner = game.checkWinner(game.state);
+    expect(isPlayerOneWinner).toBe(false);
+  });
+});
+
+describe("setGameStatus", () => {
+  test("Set gameStatus state prop to 'Player One is Winner' if playerTwoShip array is empty", () => {
+    const game = init();
+    game.state.playerTwoShips = [1];
+    game.state.playerOneShips = [];
+    game.setGameStatus(game.state);
+    expect(game.state.gameStatus).toBe("Player One is Winner");
+  });
+
+  test("Set gameStatus state prop to 'Player Two is Winner' if playerOneShip array is empty", () => {
+    const game = init();
+    game.state.playerTwoShips = [];
+    game.state.playerOneShips = [1];
+    game.setGameStatus(game.state);
+    expect(game.state.gameStatus).toBe("Player Two is Winner");
+  });
+});
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
