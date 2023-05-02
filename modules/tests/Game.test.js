@@ -289,7 +289,11 @@ test("Return the gameboard with three shipparts in [7,7], [7,6], and [7,5] for p
   const game = init();
   const expected = init();
   const ship = { size: 3 };
-  const c = [[7, 7], [7, 6],[7, 5]];
+  const c = [
+    [7, 7],
+    [7, 6],
+    [7, 5],
+  ];
   expected.state.playerOneBoard[7][7] = new ShipPart(ship);
   expected.state.playerOneBoard[7][6] = new ShipPart(ship);
   expected.state.playerOneBoard[7][5] = new ShipPart(ship);
@@ -543,14 +547,6 @@ describe("getAllShipsCoordinates", () => {
 describe("validateCoordinates", () => {
   test("Return true if all coordinates are not overlapping nor out of board", () => {
     const game = init();
-    // const ships = [
-    //   {
-    //     name: "Cruiser",
-    //     hasSunk: false,
-    //     size: 3,
-    //     hits: 0,
-    //   },
-    // ];
     const areCoordinatesValid = game.validateCoordinates(
       [
         [1, 0],
@@ -577,11 +573,33 @@ describe("validateCoordinates", () => {
   });
 });
 
-// describe("", ()=>{
-//   test("", ()=>{
-//     expect()
-//   })
-// })
+describe("resetGame", () => {
+  test("Return state to its default settings", () => {
+    const game = init();
+    game.state.stage = "gameover"
+    game.state.playerTwoBoard[2][2] = "M"
+    game.state.opponent = "Computer"
+    game.resetGame();
+    expect(game.state).toEqual({
+      stage: "selection",
+      opponent: null,
+      playerOneShips: [],
+      playerTwoShips: [],
+      placeableShips: [...game.makeShips(), ...game.makeShips()],
+      playerOneBoard: Array.from({ length: 10 }, () =>
+        Array.from({ length: 10 }, () => null)
+      ),
+      playerTwoBoard: Array.from({ length: 10 }, () =>
+        Array.from({ length: 10 }, () => null)
+      ),
+      currentPlayerBoard: "playerOneBoard",
+      directions: { right: [0, 1], up: [-1, 0], left: [0, -1], down: [1, 0] },
+
+      currentDirection: "right",
+      gameStatus: null,
+    });
+  });
+});
 
 // describe("", ()=>{
 //   test("", ()=>{

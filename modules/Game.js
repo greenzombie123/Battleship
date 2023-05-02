@@ -88,16 +88,30 @@ export default class Game {
 
     const currentShip = this.getCurrentShip(placeableShips);
 
-    this.placeShipParts(
+    const allCoordinates = this.getAllShipCoordinates(
       currentShip,
       this.getDirection(this.state),
       coordinates,
       this.state
     );
 
-    this.insertPlayerShips(this.state);
+    const areCoordinatesValid = this.validateCoordinates(
+      allCoordinates,
+      this.state
+    );
 
-    if (this.canStartGame(placeableShips)) this.startGame();
+    if (areCoordinatesValid) {
+      this.placeShipParts(
+        currentShip,
+        this.getDirection(this.state),
+        coordinates,
+        this.state
+      );
+
+      this.insertPlayerShips(this.state);
+
+      if (this.canStartGame(placeableShips)) this.startGame();
+    }
   }
 
   getAllShipCoordinates(ship, direction, coordinates, state) {
@@ -335,6 +349,29 @@ export default class Game {
     this.switchPlayerBoard(state);
     const isWinner = this.checkWinner(state);
     if (isWinner) this.setWinner();
+  }
+
+  resetGame() {
+    const state = {
+      stage: "selection",
+      opponent: null,
+      playerOneShips: [],
+      playerTwoShips: [],
+      placeableShips: [...this.makeShips(), ...this.makeShips()],
+      playerOneBoard: Array.from({ length: 10 }, () =>
+        Array.from({ length: 10 }, () => null)
+      ),
+      playerTwoBoard: Array.from({ length: 10 }, () =>
+        Array.from({ length: 10 }, () => null)
+      ),
+      currentPlayerBoard: "playerOneBoard",
+      directions: { right: [0, 1], up: [-1, 0], left: [0, -1], down: [1, 0] },
+
+      currentDirection: "right",
+      gameStatus: null,
+    };
+
+    this.setState({...state})
   }
 }
 
