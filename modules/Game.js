@@ -36,6 +36,7 @@ export default class Game {
     this.setOpponent(opponent);
     this.setStage("placement");
     this.eventEmitter.emit("startShipPlacement", this.state);
+    console.log(opponent);
   }
 
   setOpponent = (opponent) => {

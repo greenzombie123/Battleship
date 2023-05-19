@@ -1,8 +1,9 @@
 import  EventEmitter  from "./EventEmitter.js";
 import GameController from "./GameController.js";
 import SelectionUI from "./SelectionUI.js";
+import Game from "./Game.js";
 
-class GameUI {
+export default class GameUI {
   constructor() {
     this.eventEmitter = new EventEmitter();
     this.game = new Game(this.eventEmitter);
@@ -21,5 +22,7 @@ class GameUI {
     // this.eventEmitter.on("startShipPlacement", (state) =>
     //   this.shipPlacement.render(state)
     // );
+
+    this.selectionUI.render()
   }
 }
