@@ -73,20 +73,6 @@ const array = [
   },
 ];
 
-// const can1 = {
-//   flavor: 'grapefruit',
-//   ounces: {a:[1], b:{j:12}},
-// };
-// const can2 = {
-//   flavor: 'grapefruit',
-//   ounces: {a:[1], b:{j:11}},
-// };
-
-// describe('the La Croix cans on my desk', () => {
-//   test('have all the same properties', () => {
-//     expect(can1).toEqual(can2);
-//   });
-// });
 
 test("placeableSHips should have 10 ships", () => {
   const game = init();
@@ -600,6 +586,36 @@ describe("resetGame", () => {
     });
   });
 });
+
+describe("", ()=>{
+  test("", ()=>{
+    expect()
+  })
+})
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
 
 // describe("", ()=>{
 //   test("", ()=>{

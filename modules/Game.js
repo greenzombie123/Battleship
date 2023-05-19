@@ -1,5 +1,6 @@
-import Ship from "./Ship";
-import ShipPart from "./ShipPart";
+import EventEmitter from "./EventEmitter.js";
+import Ship from "./Ship.js";
+import ShipPart from "./ShipPart.js";
 
 export default class Game {
   constructor() {
@@ -21,6 +22,7 @@ export default class Game {
       currentDirection: "right",
       gameStatus: null,
     };
+    this.eventEmitter = new EventEmitter();
   }
 
   setState(newState) {
@@ -33,6 +35,7 @@ export default class Game {
     if (this.state.stage !== "selection") return;
     this.setOpponent(opponent);
     this.setStage("placement");
+    this.eventEmitter.emit("startShipPlacement", this.state);
   }
 
   setOpponent = (opponent) => {
@@ -238,14 +241,6 @@ export default class Game {
     coordinates.forEach((coor) => {
       board[coor[0]][coor[1]] = new ShipPart(ship);
     });
-    // for (let index = 0; index < size; index++) {
-    //   const shipPart = new ShipPart(ship);
-    //   board[coordinates[0]][coordinates[1]] = shipPart;
-    //   coordinates = [
-    //     coordinates[0] + direction[0],
-    //     coordinates[1] + direction[1],
-    //   ];
-    // }
     state[currentPlayerBoard] = board;
     this.setState({ state });
   }
@@ -371,7 +366,7 @@ export default class Game {
       gameStatus: null,
     };
 
-    this.setState({...state})
+    this.setState({ ...state });
   }
 }
 

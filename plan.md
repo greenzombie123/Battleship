@@ -1,172 +1,49 @@
-# Selection
+## Start Menu UI
+- Render start menu
+- In the beginning, there are two button.
+- Each button calls `chooseOpponent()` while passing an argument
+- Change into Ship Placement Screen
 
-- When webpage is loaded, `init()` is called
-    - Initialize state
-    - return state (game)
-- After `init()` is called, you can `chooseOpponent(oppnent)`
-    - Call `setOpponent(opponent)`
-       - return `computer` or `human`
-    - Assign value to state `oppnent` prop
-    - Call  `setStage(stage)`
-      -  return  `placement`
-    - Assign value to state `stage` prop
-    - Call `startPlacement()`
-      -  if stage is `placement`,
-           - create gameboard and assign to state gameBoard prop  (`makeGameBoard()`)
-           - create ships and place them in playership state (`makeShips()`)
-             - Use `distributeShips()`
-           - call notifyPlayer('placement') (`notifyPlayer()`)
+## Ship Placement UI
+- Render two battleship boards
+- Attach hoverShip function. Called when mouse hovers over a tile
+- Attach placeShip function. Called when a tile is clicked
+- When `hoverShip` eventHandlder is called, highlight ship on the appropriate board
+- When `placeShip` eventHandlder is called, call game object's `placeShip` method.
+- After calling `placeShip` function, call `render` function.
+- If the board has a shipPart, change color of that tile (`renderShip`) 
 
+## Gameplay UI
+- Render two battleship boards
+- If board has miss, call `renderMiss` function to render a miss
+- If board has hit, call `renderMiss` function to render a hit
+- If board has player one's shippart, call `renderShipPart`
+- Attach `attackShip` to tile.
 
+## Winner UI
+- Render a display that shows who is the winner
+- REnder a button
+- Attach `resetGame` function to button
 
-```javascript
-function init(){}
-function chooseOpponent(oppnent){}
-function setOpponent(){}
-function setStage(){}
-function startPlacement(){}
-function makeGameBoard(){}
-function makeShips(){}
-function notifyPlayer(){}
-
-```
-
-# Placement
-
-- After `startPlacement`, you can call `placeShip(coordinates)`
-  - If stage state is `placement`
-     -   Assign last item of ships and assign to currentShip (`getCurrentShip()`)
-         -   get board using state `currentPlayerBoard` prop
-         -   get last item with `placeableShips` prop
-         -   return a ship
-     -   Get `playerBoard`   
-     -   Get its size `getSize()`
-     -   Get direction `getDirection()`
-     -   Call `isOffBoard() `and `isOverlapping()`
-     -   If one of them is true, call `notifyPlayer(value) `and return
-     -   Else 
-         -   call `placeShipParts(ship, direction, coordinates)` and assign return value to gameboard state
-     -   If playerOneShips length is 5,
-         -   call `setCurrentPlayerShips` and call `setPlayerBoard()` 
-       - If playerTwoShips length is 5, 
-        - assign false to canPlace state
-        - Call `setStage('play')`
-        - Call `startPlay()`
-          - if stage is `play`
-             - Set playerboard state to `playerTwoBoard` 
-
+## Main Module
+- Initiate game 
+- After initiating game, look at state of the game
+- Render based off the state. 
 
 ```javascript
-function placeShip(){}
-function setCurrentShip(){}
-function setCurrentPlayerShips(){}
-function setPlayerBoard(){}
-function getDirection(){}
-function changeDirection(){}
-function setPlayerOne(){}
-function getSize(){}
-function isOffBoard(){}
-function isOverlapping(){}
-function placeShipParts(ship, direction, coordinates, gameBoard){
-    Get ship size
-    Check direction
-    If right,
-        Loop through ship size
-        Add index to left number
-        initiate a shippart while passing ship as argument 
-        insert into gameboard
+class SelectionUI{
+    this.gameController = gameController
+    render(){}
+    getButtons(){}
+    attachEventHandlers(){}
+    chooseOpponent(){}
 }
-function startPlay(){
 
-}
+class SelectionUI{}
+class ShipPlacementUI{}
+class GamePlayUI{}
+class GameOverUI{}
+class GameController{}
+class EventEmitter(){}
+
 ```
-# Play
-
-- After calling `startPlay()`, can call `receiveAttack()`
-
-function recieveAttack(coordinates){
-    Check if 
-        stage is not play
-        coordinates is out of board
-        tile was already attacked
-    If not, continue
-
-    get item from board that matches coordinates
-
-    if tile has nothing
-        if so, add miss to tile
-
-    Check if shipPart was already hit
-
-    
-    if tile has ship
-        call hit method of shippart
-            change wasHit to true
-            call hit method of ship
-                increase hit by one
-                check if hit is equal to size of ship
-                    if so, add true to isSunk
-    switchPlayerBoard
-    removeSunkships
-    check if there is winner
-        setWinner
-            set stage to gameover
-            set game status to the winner
-
-
-}
-
-
-```javascript
-function receiveAttack(coordinates){
-     If outofboard || canPlay is false, return;
-     create local variable currentBoard;
-     Call getPlayerBoard() and assign to currentBoard;
-     Call confirmHit(){}
-            If gameboard[coordinates[0]][coordinates[1]] === null
-            gameboard[coordinates[0]][coordinates[1]] = "M"
-            NotifyPlayer("Miss")
-            changeTurns(){}
-            return gameboard
-        If gameboard[coordinates[0]][coordinates[1]] === "M"
-            NotifyPlayer("Nothing")
-        If gameboard[coordinates[0]][coordinates[1]] === "H"
-            NotifyPlayer("Attaced")
-        Else 
-            get ship part from board (getShipPart())
-            call hit()
-            gameboard[coordinates[0]][coordinates[1]] = null (deleteShipPart())
-            NotifyPlayer("Hit")
-            changeTurns(){}
-        return gameboard
-    Call hasSunk() if a ship has sunk
-        If there is, remove that ship from playership prop (removeShip())
-    Call startGameOver()
-        If checkLoser() comes back true
-            Call setStatus() to confirm winner
-            Call setCanAttack()
-            Call setStage(){}
-
-}
-
-function changeTurns(){
-    If opponent is the computer
-    Call computerPlays()
-    Call setPlayerBoard()
-}
-
-function getPlayerBoard(gameboard){
-    If playerboard is `playerboardTwo`, return gameboard. If not, `playeroneboard`
-}
-
-function getShipPart(){}
-function deleteShipPart(){}
-function confirmHit(){}
-function hasSunk(){}
-function removeShip(){}
-function checkLoser(){}
-function startGameOver(){}
-```
-
-# GameOver
-Can call `playNewGame()` 

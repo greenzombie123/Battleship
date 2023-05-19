@@ -19,13 +19,3 @@ export default class Ship {
     return this.size;
   }
 }
-
-const g = {
-  a: 1,
-  b: 10,
-  c: function () {
-    return this.a;
-  },
-};
-let h = g.c();
-h;
