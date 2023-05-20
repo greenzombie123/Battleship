@@ -3,7 +3,7 @@ import Ship from "./Ship.js";
 import ShipPart from "./ShipPart.js";
 
 export default class Game {
-  constructor() {
+  constructor(eventEmitter) {
     this.state = {
       stage: "selection",
       opponent: null,
@@ -22,7 +22,7 @@ export default class Game {
       currentDirection: "right",
       gameStatus: null,
     };
-    this.eventEmitter = new EventEmitter();
+    this.eventEmitter = eventEmitter;
   }
 
   setState(newState) {
@@ -36,7 +36,6 @@ export default class Game {
     this.setOpponent(opponent);
     this.setStage("placement");
     this.eventEmitter.emit("startShipPlacement", this.state);
-    console.log(opponent);
   }
 
   setOpponent = (opponent) => {
