@@ -1,3 +1,5 @@
+import ShipPart from "../ShipPart.js";
+
 export default class ShipPlacementUI {
   constructor() {
     // this.placeShipCallback = null;
@@ -10,7 +12,7 @@ export default class ShipPlacementUI {
     // this.changeDirectionCallback = null;
     this.currentTile = null;
     //! Change later!
-    this.placeShipCallBack = null
+    this.placeShipCallBack = () => {};
   }
 
   // setChangeDirectionCallback(callback) {
@@ -43,7 +45,8 @@ export default class ShipPlacementUI {
     const tiles = this.getAllTiles();
     this.registerMouseEnterEventListeners(tiles);
     this.registerKeyDownEventListeners();
-    // console.log(tiles);
+
+    this.render();
   }
 
   renderShips() {}
@@ -60,7 +63,7 @@ export default class ShipPlacementUI {
     // const isOverlappingShip = this.isOverlapping(this.currentPlayerBoard, coordinates)
     // const tiles = this.getShipTiles(coordinates);
     //? Call game object's placeship
-    this.placeShipCallBack(currentCoordinates)
+    this.placeShipCallBack(currentCoordinates);
   }
 
   highlightShip() {
@@ -71,47 +74,50 @@ export default class ShipPlacementUI {
     const currentCoordinate = this.getCurrentCoordinate(tile);
     const coordinates = this.getCoordinates(currentCoordinate);
     const offBoard = this.isOffBoard(coordinates);
-    // const isOverlappingShip = this.isOverlapping(this.currentPlayerBoard, coordinates)
-    if (!offBoard) {
+    const isOverlappingShip = this.isOverlapping(this.currentPlayerBoard, coordinates)
+    if (!offBoard && !isOverlappingShip) {
       const tiles = this.getShipTiles(coordinates);
       this.highlightTiles(tiles);
     }
-
-    /*
-    clear previous highlighted tile
-    get current ship
-    get current direction
-    get numbers of tiles
-    check if numbers are off board
-    check if something already occupies said tiles
-    change class of those tiles
-
-    
-    */
   }
 
   render() {
-    const playerOneBoard = this.playerOneBoard;
-    const playerTwoBoard = this.playerTwoBoard;
+    const currentPlayerBoard = this.currentPlayerBoard;
+    this.renderShips(currentPlayerBoard);
   }
 
   // getCurrentShip(){}
 
   // changePlayerBoard(){}
 
-  iterateTiles(array) {
+  renderShips(array) {
     for (let row = 0; row < array.length; row++) {
-      for (let index = 0; index < row.length; index++) {}
+      for (let index = 0; index < array[row].length; index++) {
+        if (this.isShipPart(array[row][index])) {
+          const tile = this.getOneShipTile([row, index]);
+          console.log(tile);
+          this.changeColor(tile);
+        }
+      }
     }
   }
 
-  changeTileColor(tile, isPlayerOne) {
-    if (isPlayerOne) tile.classList.add("playerOneTile");
+  changeColor(tile) {
+    if (this.isPlayerOne()) tile.classList.add("playerOneTile");
     else tile.classList.add("playerTwoTile");
   }
 
   isEmptySpace(tile) {
     return tile === null;
+  }
+
+  isShipPart(item) {
+    // console.log(item);
+    return item instanceof ShipPart;
+  }
+
+  isPlayerOne() {
+    return this.currentSide === "leftSide";
   }
 
   isOffBoard(coordinates) {
@@ -167,6 +173,14 @@ export default class ShipPlacementUI {
       document.querySelector(
         `.${this.currentSide} .tile[data-number="${c[0]}${c[1]}"]`
       )
+    );
+  }
+
+  getOneShipTile(coordinates) {
+    console.log(coordinates);
+
+    return document.querySelector(
+      `.${this.currentSide} .tile[data-number="${coordinates[0]}${coordinates[1]}"]`
     );
   }
 
