@@ -71,3 +71,15 @@
 .tile {
   border: dotted black 1px;
 }
+
+.highlighted{
+  background-color: rgb(158, 158, 249);
+}
+
+.playerOneTile{
+  background-color: rgb(72, 255, 72);
+}
+
+.playerTwoTile{
+  background-color: rgb(72, 255, 72);
+}

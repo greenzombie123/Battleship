@@ -196,16 +196,33 @@ export default class Game {
   changeDirection(currentDirection) {
     switch (currentDirection) {
       case "up":
+        console.log(1);
         this.setState({ currentDirection: "right" });
+        this.eventEmitter.emit(
+          "changeDirection",
+          this.state.directions[this.state.currentDirection]
+        );
         break;
       case "right":
         this.setState({ currentDirection: "down" });
+        this.eventEmitter.emit(
+          "changeDirection",
+          this.state.directions[this.state.currentDirection]
+        );
         break;
       case "down":
         this.setState({ currentDirection: "left" });
+        this.eventEmitter.emit(
+          "changeDirection",
+          this.state.directions[this.state.currentDirection]
+        );
         break;
       case "left":
         this.setState({ currentDirection: "up" });
+        this.eventEmitter.emit(
+          "changeDirection",
+          this.state.directions[this.state.currentDirection]
+        );
         break;
       default:
         break;

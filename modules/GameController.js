@@ -6,4 +6,12 @@ export default class GameController{
     chooseOpponent(opponent){
         this.game.chooseOpponent(opponent)
     }
+
+    placeShip(coordinates){
+        this.game.placeShip(coordinates)
+    }
+
+    changeDirection(currentDirection){
+        this.game.changeDirection(currentDirection)
+    }
 }
