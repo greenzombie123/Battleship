@@ -10,8 +10,8 @@ export default class GameUI {
   constructor() {
     this.eventEmitter = new EventEmitter();
     this.game = new Game(this.eventEmitter);
-    this.selectionUI = new SelectionUI();
-    this.shipPlacementUI = new ShipPlacementUI();
+    this.selectionUI = new SelectionUI(this.game);
+    this.shipPlacementUI = new ShipPlacementUI(this.game);
     // this.gamePlayUI = new GamePlayUI();
     // this.gameOverUI = new GameOverUI();
     // this.gameController = new GameController(this.game);
@@ -37,11 +37,11 @@ export default class GameUI {
     // });
 
     //! Testing
-    this.game.state.playerOneBoard = p1b
-    this.game.state.playerTwoBoard = p2b
+    // this.game.state.playerOneBoard = p1b
+    // this.game.state.playerTwoBoard = p2b
 
-    // this.selectionUI.render();
-    this.shipPlacementUI.initiate(this.game.state);
+    this.selectionUI.render();
+    // this.shipPlacementUI.initiate(this.game.state);
   }
 }
 

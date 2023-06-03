@@ -1,6 +1,6 @@
 export default class SelectionUI {
-  constructor() {
-    this.chooseOpponentCallback = null;
+  constructor(game) {
+    this.game = game
   }
 
   render() {
@@ -32,6 +32,6 @@ export default class SelectionUI {
   }
 
   chooseOpponent(...args){
-    this.chooseOpponentCallback(...args)
+    this.game.chooseOpponent(...args)
   }
 }

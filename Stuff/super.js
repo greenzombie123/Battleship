@@ -1,22 +1,9 @@
-class J {
-  constructor() {
-    this.g = 1;
+class H {
+  constructor(game) {
+    this.game = game;
   }
 
-  somehting() {
-    return this.g;
+  selectPlayer(){
+    this.game.selectPlayer
   }
 }
-
-function dosome(i) {
-  console.log(i);
-  const g = i();
-  return g;
-}
-const ja = new J();
-
-const b = dosome(function () {
-  ja.somehting();
-});
-
-b;

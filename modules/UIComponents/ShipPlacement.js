@@ -49,10 +49,6 @@ export default class ShipPlacementUI {
     this.render();
   }
 
-  renderShips() {}
-
-  // setPlaceShipCallback() {}
-
   placeShip() {
     const tile = this.currentTile;
     const isCurrentPlayerBoard = this.validateCurrentPlayerBoard(tile);
@@ -85,10 +81,6 @@ export default class ShipPlacementUI {
     const currentPlayerBoard = this.currentPlayerBoard;
     this.renderShips(currentPlayerBoard);
   }
-
-  // getCurrentShip(){}
-
-  // changePlayerBoard(){}
 
   renderShips(array) {
     for (let row = 0; row < array.length; row++) {
