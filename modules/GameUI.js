@@ -26,18 +26,17 @@ export default class GameUI {
     //   this.gameController.changeDirection(currentDirection)
     // );
 
-    // this.eventEmitter.on("changeDirection", (currentDirection) => {
-    //   this.shipPlacementUI.setCurrentDirection(currentDirection);
-    //   console.log(2);
-    //   this.shipPlacementUI.highlightShip(this.shipPlacementUI.recentEvent)
-    // });
+    this.eventEmitter.on("changeDirection", (currentDirection, direction) => {
+      console.log(currentDirection, direction);
+      this.shipPlacementUI.setCurrentDirection(currentDirection, direction);
+    });
 
     //! Testing
     // this.game.state.playerOneBoard = p1b
     // this.game.state.playerTwoBoard = p2b
-
-    this.selectionUI.render();
-    // this.shipPlacementUI.initiate(this.game.state);
+    this.game.state.opponent = "human";
+    // this.selectionUI.render();
+    this.shipPlacementUI.initiate(this.game.state);
   }
 }
 
@@ -58,7 +57,18 @@ const ships2 = [
 ];
 
 const p1b = [
-  [new ShipPart(ships1[4]), new ShipPart(ships1[4]), null, null, null, null, null, null, null, null],
+  [
+    new ShipPart(ships1[4]),
+    new ShipPart(ships1[4]),
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
   [null, null, null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null, null, null],
@@ -71,7 +81,18 @@ const p1b = [
 ];
 
 const p2b = [
-  [new ShipPart(ships2[4]), new ShipPart(ships2[4]), null, null, null, null, null, null, null, null],
+  [
+    new ShipPart(ships2[4]),
+    new ShipPart(ships2[4]),
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
   [null, null, null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null, null, null],

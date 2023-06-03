@@ -1,18 +1,20 @@
 import ShipPart from "../ShipPart.js";
 
 export default class ShipPlacementUI {
-  constructor() {
+  constructor(game) {
     // this.placeShipCallback = null;
     this.currentPlaceableShip = null;
     this.playerOneBoard = null;
     this.playerTwoBoard = null;
     this.currentDirection = null;
+    this.direction = null;
     this.currentPlayerBoard = null;
     this.currentSide = "leftSide";
     // this.changeDirectionCallback = null;
     this.currentTile = null;
     //! Change later!
     this.placeShipCallBack = () => {};
+    this.game = game;
   }
 
   // setChangeDirectionCallback(callback) {
@@ -36,6 +38,7 @@ export default class ShipPlacementUI {
     this.playerOneBoard = state.playerOneBoard;
     this.playerTwoBoard = state.playerTwoBoard;
     this.currentDirection = state.directions[state.currentDirection];
+    this.direction = state.currentDirection;
     this.currentPlayerBoard = state.playerOneBoard;
   }
 
@@ -70,7 +73,10 @@ export default class ShipPlacementUI {
     const currentCoordinate = this.getCurrentCoordinate(tile);
     const coordinates = this.getCoordinates(currentCoordinate);
     const offBoard = this.isOffBoard(coordinates);
-    const isOverlappingShip = this.isOverlapping(this.currentPlayerBoard, coordinates)
+    const isOverlappingShip = this.isOverlapping(
+      this.currentPlayerBoard,
+      coordinates
+    );
     if (!offBoard && !isOverlappingShip) {
       const tiles = this.getShipTiles(coordinates);
       this.highlightTiles(tiles);
@@ -211,18 +217,23 @@ export default class ShipPlacementUI {
 
   //! Change implementation later
   changeDirection() {
-    if (this.currentDirection[0] === 0 && this.currentDirection[1] === 1)
-      return (this.currentDirection = [1, 0]);
-    if (this.currentDirection[0] === 1 && this.currentDirection[1] === 0)
-      return (this.currentDirection = [0, -1]);
-    if (this.currentDirection[0] === 0 && this.currentDirection[1] === -1)
-      return (this.currentDirection = [-1, 0]);
-    if (this.currentDirection[0] === -1 && this.currentDirection[1] === 0)
-      return (this.currentDirection = [0, 1]);
+    this.game.changeDirection(this.direction);
+    // if (this.currentDirection[0] === 0 && this.currentDirection[1] === 1)
+    //   return (this.currentDirection = [1, 0]);
+    // if (this.currentDirection[0] === 1 && this.currentDirection[1] === 0)
+    //   return (this.currentDirection = [0, -1]);
+    // if (this.currentDirection[0] === 0 && this.currentDirection[1] === -1)
+    //   return (this.currentDirection = [-1, 0]);
+    // if (this.currentDirection[0] === -1 && this.currentDirection[1] === 0)
+    //   return (this.currentDirection = [0, 1]);
   }
 
   //! Change implementation later
-  getCurrentDirection() {}
+  setCurrentDirection(currentDirection, direction) {
+    // console.log(currentDirection, direction);
+    this.currentDirection = currentDirection;
+    this.direction = direction;
+  }
 
   setCurrentTile(event) {
     this.currentTile = event.currentTarget;
