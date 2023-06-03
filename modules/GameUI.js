@@ -18,13 +18,9 @@ export default class GameUI {
   }
 
   initiate() {
-    // this.selectionUI.setChooseOpponentCallBack((opponent) =>
-    //   this.gameController.chooseOpponent(opponent)
-    // );
-
-    // this.eventEmitter.on("startShipPlacement", (state) => {
-    //   this.shipPlacementUI.initiate(state);
-    // });
+    this.eventEmitter.on("startShipPlacement", (state) => {
+      this.shipPlacementUI.initiate(state);
+    });
 
     // this.shipPlacementUI.setChangeDirectionCallback((currentDirection) =>
     //   this.gameController.changeDirection(currentDirection)

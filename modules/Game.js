@@ -32,7 +32,6 @@ export default class Game {
   // User can call this during `selection` to choose their opponent
   // After that, move to 'placement' stage by calling `startPlacement`
   chooseOpponent(opponent) {
-    console.log(123);
     if (this.state.stage !== "selection") return;
     this.setOpponent(opponent);
     this.setStage("placement");
