@@ -76,6 +76,10 @@
   background-color: rgb(158, 158, 249);
 }
 
+.unplaceable{
+  background-color: rgb(175, 175, 175);
+}
+
 .playerOneTile{
   background-color: rgb(72, 255, 72);
 }

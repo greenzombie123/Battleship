@@ -28,6 +28,7 @@ export default class GameUI {
 
     this.eventEmitter.on("renderShipPlacement", (state) => {
       this.shipPlacementUI.getGameState(state);
+      this.shipPlacementUI.render()
     });
 
     //! Testing

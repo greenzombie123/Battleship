@@ -37,7 +37,7 @@ export default class ShipPlacementUI {
     const tiles = this.getAllTiles();
     this.registerMouseEnterEventListeners(tiles);
     this.registerKeyDownEventListeners();
-    this.registerMouseClickEventListeners(tiles)
+    this.registerMouseClickEventListeners(tiles);
 
     this.render();
   }
@@ -59,11 +59,20 @@ export default class ShipPlacementUI {
     const currentCoordinate = this.getCurrentCoordinate(tile);
     const coordinates = this.getCoordinates(currentCoordinate);
     const offBoard = this.isOffBoard(coordinates);
+    if (offBoard) {
+      const tiles = this.getShipTiles(coordinates);
+      this.showUnplaceable(tiles);
+      return;
+    }
     const isOverlappingShip = this.isOverlapping(
       this.currentPlayerBoard,
       coordinates
     );
-    if (!offBoard && !isOverlappingShip) {
+    if (isOverlappingShip) {
+      const tiles = this.getShipTiles(coordinates);
+      this.showUnplaceable(tiles);
+    }
+    if (!isOverlappingShip) {
       const tiles = this.getShipTiles(coordinates);
       this.highlightTiles(tiles);
     }
@@ -130,6 +139,7 @@ export default class ShipPlacementUI {
   clearAllHighlighted() {
     const tiles = document.querySelectorAll(".tile");
     tiles.forEach((tile) => tile.classList.remove("highlighted"));
+    tiles.forEach((tile) => tile.classList.remove("unplaceable"));
   }
 
   getCoordinates(coordinates) {
@@ -190,10 +200,10 @@ export default class ShipPlacementUI {
     });
   }
 
-  registerMouseClickEventListeners(tiles){
+  registerMouseClickEventListeners(tiles) {
     tiles.forEach((tile) => {
       tile.addEventListener("click", (event) => {
-        this.placeShip()
+        this.placeShip();
       });
     });
   }
@@ -207,6 +217,12 @@ export default class ShipPlacementUI {
 
   highlightTiles(tiles) {
     tiles.forEach((tile) => tile.classList.add("highlighted"));
+  }
+
+  showUnplaceable(tiles) {
+    tiles.forEach((tile) => {
+      if (tile) tile.classList.add("unplaceable");
+    });
   }
 
   changeDirection() {
