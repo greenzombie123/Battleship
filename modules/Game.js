@@ -87,6 +87,7 @@ export default class Game {
     const { placeableShips } = this.state;
 
     const shouldPlaceShip = this.canPlaceShip(coordinates, this.state);
+
     if (!shouldPlaceShip) return;
 
     const currentShip = this.getCurrentShip(placeableShips);
@@ -97,21 +98,20 @@ export default class Game {
       coordinates,
       this.state
     );
-
+    // console.log(allCoordinates);
     const areCoordinatesValid = this.validateCoordinates(
       allCoordinates,
       this.state
     );
 
     if (areCoordinatesValid) {
-      this.placeShipParts(
-        currentShip,
-        this.getDirection(this.state),
-        coordinates,
-        this.state
-      );
+      this.placeShipParts(currentShip, allCoordinates, this.state);
+
+      // this.getDirection(this.state),
 
       this.insertPlayerShips(this.state);
+
+      this.eventEmitter.emit("renderShipPlacement", this.state);
 
       if (this.canStartGame(placeableShips)) this.startGame();
     }
@@ -144,7 +144,8 @@ export default class Game {
     const { currentPlayerBoard, stage } = state;
     if (stage !== "placement") return false;
     if (this.isOffBoard(coordinates)) return false;
-    if (this.isOverlapping(this.state[currentPlayerBoard])) return false;
+    if (this.isOverlapping(this.state[currentPlayerBoard], coordinates))
+      return false;
     return true;
   }
 
@@ -171,7 +172,7 @@ export default class Game {
   }
 
   // Get last item from placeableShips array
-  getCurrentShip({ placeableShips }) {
+  getCurrentShip(placeableShips) {
     return placeableShips[placeableShips.length - 1];
   }
 
@@ -256,9 +257,12 @@ export default class Game {
 
   placeShipParts(ship, coordinates, state) {
     const { size } = ship;
+    console.log(ship, coordinates, state);
     const { currentPlayerBoard } = state;
     const board = state[currentPlayerBoard];
+    // console.log(coordinates);
     coordinates.forEach((coor) => {
+      // console.log(board[coor[0]][coor[1]]);
       board[coor[0]][coor[1]] = new ShipPart(ship);
     });
     state[currentPlayerBoard] = board;

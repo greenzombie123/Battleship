@@ -22,19 +22,19 @@ export default class GameUI {
       this.shipPlacementUI.initiate(state);
     });
 
-    // this.shipPlacementUI.setChangeDirectionCallback((currentDirection) =>
-    //   this.gameController.changeDirection(currentDirection)
-    // );
-
     this.eventEmitter.on("changeDirection", (currentDirection, direction) => {
-      console.log(currentDirection, direction);
       this.shipPlacementUI.setCurrentDirection(currentDirection, direction);
+    });
+
+    this.eventEmitter.on("renderShipPlacement", (state) => {
+      this.shipPlacementUI.getGameState(state);
     });
 
     //! Testing
     // this.game.state.playerOneBoard = p1b
     // this.game.state.playerTwoBoard = p2b
     this.game.state.opponent = "human";
+    this.game.state.stage = "placement"
     // this.selectionUI.render();
     this.shipPlacementUI.initiate(this.game.state);
   }

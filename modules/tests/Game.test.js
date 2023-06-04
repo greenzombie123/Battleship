@@ -1,6 +1,7 @@
 import Game, { init } from "../Game";
 import ShipPart from "../ShipPart";
 import Ship from "../Ship";
+import EventEmitter from "../EventEmitter";
 
 beforeEach(() => {
   // jest.resetModules();
@@ -141,14 +142,14 @@ test(`Set stage to "placement"`, () => {
 
 describe("Test chooseOpponent method", () => {
   test("Update opponent and stage state", () => {
-    const game = init();
+    const game = new Game(new EventEmitter())
     game.chooseOpponent("human");
     expect(game.state.opponent).toBe("human");
     expect(game.state.stage).toBe("placement");
   });
 
   test("Update opponent and stage prop in state", () => {
-    const game = init();
+    const game = new Game(new EventEmitter())
     game.chooseOpponent("computer");
     expect(game.state.opponent).toBe("computer");
     expect(game.state.stage).toBe("placement");
@@ -164,8 +165,8 @@ test("Notify player to place", () => {
 test("Get the last item for placement", () => {
   const game = init();
   game.state.placeableShips = [...array];
-  const currentShip = game.getCurrentShip(game.state);
-  expect(currentShip).toMatchObject({
+  const currentShip = game.getCurrentShip(game.state.placeableShips);
+  expect(currentShip).toEqual({
     name: "Destroyer",
     hasSunk: false,
     size: 2,
@@ -296,7 +297,7 @@ test("Remove a ship after placing its ship parts", () => {
 
 describe("Directions", () => {
   test("Change currentDirection to 'down'", () => {
-    const game = init();
+    const game = new Game(new EventEmitter())
     game.changeDirection("right");
     expect(game.state.currentDirection).toEqual("down");
   });

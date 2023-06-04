@@ -2,7 +2,6 @@ import ShipPart from "../ShipPart.js";
 
 export default class ShipPlacementUI {
   constructor(game) {
-    // this.placeShipCallback = null;
     this.currentPlaceableShip = null;
     this.playerOneBoard = null;
     this.playerTwoBoard = null;
@@ -10,21 +9,11 @@ export default class ShipPlacementUI {
     this.direction = null;
     this.currentPlayerBoard = null;
     this.currentSide = "leftSide";
-    // this.changeDirectionCallback = null;
     this.currentTile = null;
     //! Change later!
     this.placeShipCallBack = () => {};
     this.game = game;
   }
-
-  // setChangeDirectionCallback(callback) {
-  //   this.changeDirectionCallback = callback;
-  // }
-
-  // setCurrentDirection(direction) {
-  //   this.currentDirection = direction;
-  //   console.log(this.currentDirection);
-  // }
 
   removeButtons() {
     const buttonContainer = document.querySelector(".buttonContainer");
@@ -48,6 +37,7 @@ export default class ShipPlacementUI {
     const tiles = this.getAllTiles();
     this.registerMouseEnterEventListeners(tiles);
     this.registerKeyDownEventListeners();
+    this.registerMouseClickEventListeners(tiles)
 
     this.render();
   }
@@ -57,12 +47,8 @@ export default class ShipPlacementUI {
     const isCurrentPlayerBoard = this.validateCurrentPlayerBoard(tile);
     if (!isCurrentPlayerBoard) return;
     const currentCoordinates = this.getCurrentCoordinate(tile);
-    // const coordinates = this.getCoordinates(currentCoordinate);
-    // const offBoard = this.isOffBoard(coordinates);
-    // const isOverlappingShip = this.isOverlapping(this.currentPlayerBoard, coordinates)
-    // const tiles = this.getShipTiles(coordinates);
-    //? Call game object's placeship
-    this.placeShipCallBack(currentCoordinates);
+    //! Call game object's placeship
+    this.game.placeShip(currentCoordinates);
   }
 
   highlightShip() {
@@ -204,6 +190,14 @@ export default class ShipPlacementUI {
     });
   }
 
+  registerMouseClickEventListeners(tiles){
+    tiles.forEach((tile) => {
+      tile.addEventListener("click", (event) => {
+        this.placeShip()
+      });
+    });
+  }
+
   validateCurrentPlayerBoard(tile) {
     const isCurrentPlayerBoard = tile.parentNode.parentNode.classList.contains(
       this.currentSide
@@ -215,22 +209,11 @@ export default class ShipPlacementUI {
     tiles.forEach((tile) => tile.classList.add("highlighted"));
   }
 
-  //! Change implementation later
   changeDirection() {
     this.game.changeDirection(this.direction);
-    // if (this.currentDirection[0] === 0 && this.currentDirection[1] === 1)
-    //   return (this.currentDirection = [1, 0]);
-    // if (this.currentDirection[0] === 1 && this.currentDirection[1] === 0)
-    //   return (this.currentDirection = [0, -1]);
-    // if (this.currentDirection[0] === 0 && this.currentDirection[1] === -1)
-    //   return (this.currentDirection = [-1, 0]);
-    // if (this.currentDirection[0] === -1 && this.currentDirection[1] === 0)
-    //   return (this.currentDirection = [0, 1]);
   }
 
-  //! Change implementation later
   setCurrentDirection(currentDirection, direction) {
-    // console.log(currentDirection, direction);
     this.currentDirection = currentDirection;
     this.direction = direction;
   }
