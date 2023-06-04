@@ -74,7 +74,6 @@ const array = [
   },
 ];
 
-
 test("placeableSHips should have 10 ships", () => {
   const game = init();
   expect(game.state.placeableShips).toEqual([
@@ -142,14 +141,14 @@ test(`Set stage to "placement"`, () => {
 
 describe("Test chooseOpponent method", () => {
   test("Update opponent and stage state", () => {
-    const game = new Game(new EventEmitter())
+    const game = new Game(new EventEmitter());
     game.chooseOpponent("human");
     expect(game.state.opponent).toBe("human");
     expect(game.state.stage).toBe("placement");
   });
 
   test("Update opponent and stage prop in state", () => {
-    const game = new Game(new EventEmitter())
+    const game = new Game(new EventEmitter());
     game.chooseOpponent("computer");
     expect(game.state.opponent).toBe("computer");
     expect(game.state.stage).toBe("placement");
@@ -297,7 +296,7 @@ test("Remove a ship after placing its ship parts", () => {
 
 describe("Directions", () => {
   test("Change currentDirection to 'down'", () => {
-    const game = new Game(new EventEmitter())
+    const game = new Game(new EventEmitter());
     game.changeDirection("right");
     expect(game.state.currentDirection).toEqual("down");
   });
@@ -349,6 +348,21 @@ describe("isStagePlay", () => {
     const game = init();
     game.state.stage = "play";
     expect(game.isStagePlay(game.state.stage)).toBe(true);
+  });
+});
+
+describe("canSwitchBoard", () => {
+  test("Change to second player board when there are 5 ships left in placeableships", () => {
+    const game = new Game(new EventEmitter());
+    game.state.placeableShips = [
+      new Ship("Carrier", 5),
+      new Ship("Battleship", 4),
+      new Ship("Cruiser", 3),
+      new Ship("Submarine", 3),
+      new Ship("Destroyer", 2),
+    ];
+    const canSwitch = game.canSwitchBoard(game.state.placeableShips)
+    expect(canSwitch).toBe(true)
   });
 });
 
@@ -563,9 +577,9 @@ describe("validateCoordinates", () => {
 describe("resetGame", () => {
   test("Return state to its default settings", () => {
     const game = init();
-    game.state.stage = "gameover"
-    game.state.playerTwoBoard[2][2] = "M"
-    game.state.opponent = "Computer"
+    game.state.stage = "gameover";
+    game.state.playerTwoBoard[2][2] = "M";
+    game.state.opponent = "Computer";
     game.resetGame();
     expect(game.state).toEqual({
       stage: "selection",
@@ -588,11 +602,11 @@ describe("resetGame", () => {
   });
 });
 
-describe("", ()=>{
-  test("", ()=>{
-    expect()
-  })
-})
+describe("", () => {
+  test("", () => {
+    expect();
+  });
+});
 
 // describe("", ()=>{
 //   test("", ()=>{

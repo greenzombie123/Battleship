@@ -98,7 +98,6 @@ export default class Game {
       coordinates,
       this.state
     );
-    // console.log(allCoordinates);
     const areCoordinatesValid = this.validateCoordinates(
       allCoordinates,
       this.state
@@ -107,12 +106,18 @@ export default class Game {
     if (areCoordinatesValid) {
       this.placeShipParts(currentShip, allCoordinates, this.state);
 
-      // this.getDirection(this.state),
-
       this.insertPlayerShips(this.state);
 
       this.eventEmitter.emit("renderShipPlacement", this.state);
 
+      const shouldSwitchBoard = this.canSwitchBoard(this.state.placeableShips);
+      
+      if (shouldSwitchBoard) {
+        this.switchPlayerBoard(this.state);
+        this.eventEmitter.emit("boardSwitched", this.state);
+      }
+
+      // console.log(this.state);
       if (this.canStartGame(placeableShips)) this.startGame();
     }
   }
@@ -256,17 +261,17 @@ export default class Game {
   }
 
   placeShipParts(ship, coordinates, state) {
-    const { size } = ship;
-    console.log(ship, coordinates, state);
     const { currentPlayerBoard } = state;
     const board = state[currentPlayerBoard];
-    // console.log(coordinates);
     coordinates.forEach((coor) => {
-      // console.log(board[coor[0]][coor[1]]);
       board[coor[0]][coor[1]] = new ShipPart(ship);
     });
     state[currentPlayerBoard] = board;
     this.setState({ state });
+  }
+
+  canSwitchBoard(placeableShips) {
+    return placeableShips.length === 5;
   }
 
   isStagePlay(stage) {

@@ -28,14 +28,21 @@ export default class GameUI {
 
     this.eventEmitter.on("renderShipPlacement", (state) => {
       this.shipPlacementUI.getGameState(state);
-      this.shipPlacementUI.render()
+      this.shipPlacementUI.render();
+      // console.log(state);
+    });
+
+    this.eventEmitter.on("boardSwitched", (state) => {
+      this.shipPlacementUI.getGameState(state);
+      this.shipPlacementUI.switchPlayerBoard(state);
+      this.shipPlacementUI.render();
     });
 
     //! Testing
     // this.game.state.playerOneBoard = p1b
     // this.game.state.playerTwoBoard = p2b
     this.game.state.opponent = "human";
-    this.game.state.stage = "placement"
+    this.game.state.stage = "placement";
     // this.selectionUI.render();
     this.shipPlacementUI.initiate(this.game.state);
   }

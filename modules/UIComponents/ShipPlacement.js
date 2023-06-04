@@ -3,15 +3,11 @@ import ShipPart from "../ShipPart.js";
 export default class ShipPlacementUI {
   constructor(game) {
     this.currentPlaceableShip = null;
-    this.playerOneBoard = null;
-    this.playerTwoBoard = null;
     this.currentDirection = null;
     this.direction = null;
     this.currentPlayerBoard = null;
     this.currentSide = "leftSide";
     this.currentTile = null;
-    //! Change later!
-    this.placeShipCallBack = () => {};
     this.game = game;
   }
 
@@ -24,11 +20,9 @@ export default class ShipPlacementUI {
   getGameState(state) {
     this.currentPlaceableShip =
       state.placeableShips[state.placeableShips.length - 1];
-    this.playerOneBoard = state.playerOneBoard;
-    this.playerTwoBoard = state.playerTwoBoard;
     this.currentDirection = state.directions[state.currentDirection];
     this.direction = state.currentDirection;
-    this.currentPlayerBoard = state.playerOneBoard;
+    this.currentPlayerBoard = state[state.currentPlayerBoard];
   }
 
   initiate(state) {
@@ -88,7 +82,6 @@ export default class ShipPlacementUI {
       for (let index = 0; index < array[row].length; index++) {
         if (this.isShipPart(array[row][index])) {
           const tile = this.getOneShipTile([row, index]);
-          console.log(tile);
           this.changeColor(tile);
         }
       }
@@ -136,6 +129,12 @@ export default class ShipPlacementUI {
     });
   }
 
+  switchPlayerBoard({ placeableShips }) {
+    if (placeableShips.length === 5) {
+      this.currentSide = "rightSide";
+    }
+  }
+
   clearAllHighlighted() {
     const tiles = document.querySelectorAll(".tile");
     tiles.forEach((tile) => tile.classList.remove("highlighted"));
@@ -171,8 +170,6 @@ export default class ShipPlacementUI {
   }
 
   getOneShipTile(coordinates) {
-    console.log(coordinates);
-
     return document.querySelector(
       `.${this.currentSide} .tile[data-number="${coordinates[0]}${coordinates[1]}"]`
     );
