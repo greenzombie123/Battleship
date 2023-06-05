@@ -111,14 +111,16 @@ export default class Game {
       this.eventEmitter.emit("renderShipPlacement", this.state);
 
       const shouldSwitchBoard = this.canSwitchBoard(this.state.placeableShips);
-      
+
       if (shouldSwitchBoard) {
         this.switchPlayerBoard(this.state);
         this.eventEmitter.emit("boardSwitched", this.state);
       }
 
       // console.log(this.state);
-      if (this.canStartGame(placeableShips)) this.startGame();
+      if (this.canStartGame(placeableShips)) {
+        this.startGame();
+      }
     }
   }
 
