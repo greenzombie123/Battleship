@@ -69,21 +69,40 @@
 }
 
 .tile {
+  position: relative;
   border: dotted black 1px;
 }
 
-.highlighted{
+.highlighted {
   background-color: rgb(158, 158, 249);
 }
 
-.unplaceable{
+.unplaceable {
   background-color: rgb(175, 175, 175);
 }
 
-.playerOneTile{
+.playerOneTile {
   background-color: rgb(72, 255, 72);
 }
 
-.playerTwoTile{
+.playerTwoTile {
   background-color: rgb(245, 41, 41);
+}
+
+.missed::before {
+  content: "✗";
+  position: absolute;
+  color: black;
+  font-size: 40px;
+  top: 17%;
+  left: 15%;
+}
+
+.hit::before {
+  content: "◯";
+  position: absolute;
+  color: black;
+  font-size: 33px;
+  top: 15%;
+  left: 15%;
 }

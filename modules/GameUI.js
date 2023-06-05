@@ -1,5 +1,5 @@
 import EventEmitter from "./EventEmitter.js";
-import GameController from "./GameController.js";
+import GamePlayUI from "./UIComponents/GamePlayUI.js";
 import SelectionUI from "./UIComponents/SelectionUI.js";
 import ShipPlacementUI from "./UIComponents/ShipPlacement.js";
 import ShipPart from "./ShipPart.js";
@@ -12,9 +12,7 @@ export default class GameUI {
     this.game = new Game(this.eventEmitter);
     this.selectionUI = new SelectionUI(this.game);
     this.shipPlacementUI = new ShipPlacementUI(this.game);
-    // this.gamePlayUI = new GamePlayUI();
-    // this.gameOverUI = new GameOverUI();
-    // this.gameController = new GameController(this.game);
+    this.gamePlayUI = new GamePlayUI(this.game);
   }
 
   initiate() {
@@ -29,7 +27,6 @@ export default class GameUI {
     this.eventEmitter.on("renderShipPlacement", (state) => {
       this.shipPlacementUI.getGameState(state);
       this.shipPlacementUI.render();
-      // console.log(state);
     });
 
     this.eventEmitter.on("boardSwitched", (state) => {
@@ -38,13 +35,20 @@ export default class GameUI {
       this.shipPlacementUI.render();
     });
 
-    //! Testing
-    // this.game.state.playerOneBoard = p1b
-    // this.game.state.playerTwoBoard = p2b
+    //! ShipPlacement Testing
+    // // this.game.state.playerOneBoard = p1b
+    // // this.game.state.playerTwoBoard = p2b
+    // this.game.state.opponent = "human";
+    // this.game.state.stage = "placement";
+    // // this.selectionUI.render();
+    // this.shipPlacementUI.initiate(this.game.state);
+
+    //! Game Play Testing
+    this.game.state.playerOneBoard = p1b
+    this.game.state.playerTwoBoard = p2b
     this.game.state.opponent = "human";
-    this.game.state.stage = "placement";
-    // this.selectionUI.render();
-    this.shipPlacementUI.initiate(this.game.state);
+    this.game.state.stage = "play";
+    this.gamePlayUI.initiate(this.game.state);
   }
 }
 
