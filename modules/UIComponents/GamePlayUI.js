@@ -100,14 +100,10 @@ export default class GamePlayUI {
       for (let index = 0; index < playerOneBoard[row].length; index++) {
         if (this.isShipPart(playerOneBoard[row][index])) {
           const tile = this.getTile([row, index], "leftSide");
-          this.changeColor(tile);
+          tile.classList.add("playerOneTile");
         }
       }
     }
-  }
-
-  changeColor(tile) {
-    tile.classList.add("playerOneTile");
   }
 
   hasHitClass(tile) {
