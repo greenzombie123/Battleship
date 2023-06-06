@@ -9,7 +9,7 @@ export default class GamePlayUI {
     this.playerOneTiles = null;
     this.playerTwoTiles = null;
     this.currentPlayerBoard = null;
-    this.currentSide = "leftSide";
+    this.currentSide = "rightSide";
   }
 
   /*
@@ -32,10 +32,10 @@ export default class GamePlayUI {
     this.render();
   }
 
-  setGameState({ playerOneBoard, playerTwoBoard, currentPlayerBoard }) {
+  setGameState({ playerOneBoard, playerTwoBoard, currentBoard }) {
     this.playerOneBoard = playerOneBoard;
     this.playerTwoBoard = playerTwoBoard;
-    this.currentSide = currentPlayerBoard === "playerOneBoard" ? "leftSide" : "rightSide"
+    this.currentSide = currentBoard === "playerOneBoard" ? "leftSide" : "rightSide"
   }
 
   getAllTiles() {
@@ -46,6 +46,7 @@ export default class GamePlayUI {
     tiles.forEach((tile) => {
       tile.addEventListener("click", (event) => {
         const isCurrentBoard = this.validateCurrentPlayerBoard(event.currentTarget)
+        // console.log(isCurrentBoard);
         if(isCurrentBoard){
             const coordinates = this.getCoordinates(event.currentTarget);
             this.makeAttack(coordinates);
@@ -169,8 +170,8 @@ export default class GamePlayUI {
     renderGame event
     */
   makeAttack(coordinates) {
-    // this.game.makeAttack(coordinates)
-    console.log(coordinates);
+    this.game.makeAttack(coordinates)
+    // console.log(coordinates);
   }
 
   getCoordinates(tile) {

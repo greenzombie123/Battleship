@@ -449,11 +449,20 @@ describe("removeSunkShips", () => {
       { hasSunk: false },
       { hasSunk: false },
     ];
-    game.removeSunkShips(game.state, game.state);
+    game.removeSunkShips(game.state);
     expect(game.state.playerOneShips).toEqual([
       { hasSunk: false },
       { hasSunk: false },
     ]);
+  });
+
+  test("Remove a ship whose wasSunk prop is true", () => {
+    const game = init();
+    game.state.playerOneShips = [
+      { hasSunk: true }
+    ];
+    game.removeSunkShips(game.state);
+    expect(game.state.playerOneShips.length).toBe(0)
   });
 });
 
@@ -470,6 +479,7 @@ describe("checkWinner", () => {
     const game = init();
     game.switchPlayerBoard(game.state);
     game.state.playerTwoShips = [1];
+    game.state.playerOneShips = [1];
     const isPlayerOneWinner = game.checkWinner(game.state);
     expect(isPlayerOneWinner).toBe(false);
   });
@@ -511,7 +521,7 @@ describe("validateAttack", () => {
 
 describe("makeAttack", () => {
   test("Miss a target on the board", () => {
-    const game = init();
+    const game = new Game(new EventEmitter());
     game.state.stage = "play";
     game.makeAttack([1, 1]);
     const { playerOneBoard } = game.state;

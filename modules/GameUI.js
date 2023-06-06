@@ -35,10 +35,11 @@ export default class GameUI {
       this.shipPlacementUI.render();
     });
 
-    this.eventEmitter.on("attackMade", (board)=>{
-      this.gamePlayUI.setGameState(board)
-      this.gamePlayUI.render()
-    })
+    this.eventEmitter.on("attackMade", (board) => {
+      // console.log(board);
+      this.gamePlayUI.setGameState(board);
+      this.gamePlayUI.render();
+    });
 
     //! ShipPlacement Testing
     // // this.game.state.playerOneBoard = p1b
@@ -49,10 +50,13 @@ export default class GameUI {
     // this.shipPlacementUI.initiate(this.game.state);
 
     //! Game Play Testing
-    this.game.state.playerOneBoard = p1b
-    this.game.state.playerTwoBoard = p2b
+    this.game.state.playerOneBoard = p1b;
+    this.game.state.playerTwoBoard = p2b;
+    this.game.state.playerOneShips = [ships1[3], ships1[4]];
+    this.game.state.playerTwoShips = [ships2[4]];
     this.game.state.opponent = "human";
     this.game.state.stage = "play";
+    this.game.state.currentPlayerBoard = "playerTwoBoard"
     this.gamePlayUI.initiate(this.game.state);
   }
 }
@@ -94,15 +98,26 @@ const p1b = [
   [null, null, null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, new ShipPart(ships1[3]), new ShipPart(ships1[3]), new ShipPart(ships1[3])],
+  [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    new ShipPart(ships1[3]),
+    new ShipPart(ships1[3]),
+    new ShipPart(ships1[3]),
+  ],
 ];
 
-p1b[0][0].hit()
-p1b[0][1].hit()
+p1b[0][0].hit();
+p1b[0][1].hit();
 
-p1b[9][7].hit()
+p1b[9][7].hit();
 // p1b[9][8].hit()
-p1b[9][9].hit()
+p1b[9][9].hit();
 
 const p2b = [
   [

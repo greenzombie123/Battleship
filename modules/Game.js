@@ -324,17 +324,16 @@ export default class Game {
       const { playerTwoShips } = state;
       const playerShips = [...playerTwoShips];
       const remainingShips = playerShips.filter((ship) => !ship.hasSunk);
+      // console.log({ playerTwoShips: remainingShips });
       this.setState({ playerTwoShips: remainingShips });
     }
   }
 
   checkWinner(state) {
-    const { currentPlayerBoard } = state;
-    const playerShips =
-      currentPlayerBoard === "playerTwoBoard"
-        ? "playerTwoShips"
-        : "playerOneShips";
-    return state[playerShips].length === 0;
+    const { playerOneShips, playerTwoShips } = state;
+    if (playerOneShips.length === 0) return true;
+    if (playerTwoShips.length === 0) return true;
+    return false;
   }
 
   setGameStatus(state) {
@@ -366,21 +365,29 @@ export default class Game {
     if (isMiss) {
       this.missTarget(state, coordinates);
       this.switchPlayerBoard(state);
+      // console.log(state);
+      this.eventEmitter.emit("attackMade", {
+        playerOneBoard: this.state.playerOneBoard,
+        playerTwoBoard: this.state.playerTwoBoard,
+        currentBoard: this.state.currentPlayerBoard,
+      });
       return;
     }
     const wasHit = this.confirmWasHit(shipPart);
     if (wasHit) return;
     shipPart.hit();
-    
+
     this.removeSunkShips(state);
     this.switchPlayerBoard(state);
 
     this.eventEmitter.emit("attackMade", {
-      playerOneBoard: this.playerOneBoard,
-      playerTwoBoard: this.playerTwoBoard,
-      currentBoard: this.currentPlayerBoard,
+      playerOneBoard: this.state.playerOneBoard,
+      playerTwoBoard: this.state.playerTwoBoard,
+      currentBoard: this.state.currentPlayerBoard,
     });
-    const isWinner = this.checkWinner(state);
+
+    const isWinner = this.checkWinner(this.state);
+    console.log(isWinner);
     if (isWinner) this.setWinner();
   }
 

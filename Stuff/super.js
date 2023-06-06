@@ -1,10 +1,6 @@
-function g(b, ...g){
-  b(...g)
-}
+const g = {a:12, b:[1,2,3]}
+const j = {a:true, b:[]}
 
-function t(a,b){
-  console.log(a,b);
-}
+const a = {...g, ...j}
 
-g(t, 12, 10)
-g(t, [3,9])
+a
