@@ -5,6 +5,8 @@ export default class GamePlayUI {
     this.game = game;
     this.playerOneBoard = null;
     this.playerTwoBoard = null;
+    this.playerOneTiles = null;
+    this.playerTwoTiles = null;
     this.currentPlayerBoard = null;
     this.currentSide = "leftSide";
   }
@@ -20,11 +22,12 @@ export default class GamePlayUI {
     this.playerOneBoard = state.playerOneBoard;
     this.playerTwoBoard = state.playerTwoBoard;
     this.currentPlayerBoard = state.currentPlayerBoard;
-    const tiles = this.getAllTiles()
-    this.registerMouseClickEventListeners(tiles)
-    this.renderPlayerOneShips(this.playerOneBoard)
+    const tiles = this.getAllTiles();
+    this.registerMouseClickEventListeners(tiles);
+    this.renderPlayerOneShips(this.playerOneBoard);
+    this.setPlayerTiles();
 
-    this.render()
+    this.render();
   }
 
   getAllTiles() {
@@ -34,47 +37,91 @@ export default class GamePlayUI {
   registerMouseClickEventListeners(tiles) {
     tiles.forEach((tile) => {
       tile.addEventListener("click", (event) => {
-        const coordinates = this.getCoordinates(event.currentTarget)
-        this.makeAttack(coordinates)
+        const coordinates = this.getCoordinates(event.currentTarget);
+        this.makeAttack(coordinates);
       });
     });
   }
 
   render() {
-    this.renderMiss()
-    this.renderHit()
+    this.renderMiss(this.playerOneBoard, this.playerTwoBoard);
+    this.renderHit(this.playerOneBoard, this.playerTwoBoard);
   }
 
-  renderHit() {}
+  renderHit(playerOneBoard, playerTwoBoard) {
+    const sides = ["leftSide", "rightSide"];
+    const boards = [playerOneBoard, playerTwoBoard];
+    for (let board = 0; board < boards.length; board++) {
+      const currentSide = sides[board];
+      for (let row = 0; row < boards[board].length; row++) {
+        for (let index = 0; index < boards[board][row].length; index++) {
+          let tile = boards[board][row][index];
 
-  renderPlayerOneShips(playerOneBoard) {
-    for (let row = 0; row < playerOneBoard.length; row++) {
-        for (let index = 0; index < playerOneBoard[row].length; index++) {
-          if (this.isShipPart(playerOneBoard[row][index])) {
-            const tile = this.getTile([row, index]);
-            this.changeColor(tile);
+          const hasShipPart = this.isShipPart(tile);
+          if (hasShipPart) {
+            const wasHit = this.confirmWasHit(tile);
+            if (wasHit) {
+              tile = this.getTile([row, index], currentSide);
+              const isHitClass = this.hasHitClass(tile);
+              if (!isHitClass) {
+                tile.classList.add("hit");
+              }
+            }
           }
         }
       }
+    }
+  }
+
+  renderPlayerOneShips(playerOneBoard) {
+    for (let row = 0; row < playerOneBoard.length; row++) {
+      for (let index = 0; index < playerOneBoard[row].length; index++) {
+        if (this.isShipPart(playerOneBoard[row][index])) {
+          const tile = this.getTile([row, index], "leftSide");
+          this.changeColor(tile);
+        }
+      }
+    }
   }
 
   changeColor(tile) {
-     tile.classList.add("playerOneTile");
+    tile.classList.add("playerOneTile");
+  }
+
+  hasHitClass(tile) {
+    return tile.classList.contains("hit");
+  }
+
+  hasMissClass() {
+    return tile.classList.contains("missed");
   }
 
   isShipPart(item) {
     return item instanceof ShipPart;
   }
 
-  getTile(coordinates) {
+  confirmWasHit(shipPart) {
+    return shipPart.wasHit;
+  }
+
+  getTile(coordinates, side) {
     return document.querySelector(
-      `.${this.currentSide} .tile[data-number="${coordinates[0]}${coordinates[1]}"]`
+      `.${side} .tile[data-number="${coordinates[0]}${coordinates[1]}"]`
     );
   }
 
-  renderMiss(player1Board, player2Board) {
+  getAllTiles() {
+    return document.querySelectorAll(".tile");
+  }
+
+  setPlayerTiles() {
+    this.playerOneTiles = document.querySelectorAll(".leftSide .tile");
+    this.playerTwoTiles = document.querySelectorAll(".rightSide .tile");
+  }
+
+  renderMiss() {
     // const tile = document.querySelector(".tile")
-    // tile.classList.add('hit') 
+    // tile.classList.add('hit')
   }
 
   renderGameOver() {}
@@ -105,6 +152,6 @@ export default class GamePlayUI {
 //     tiles.forEach((tile) => tile.classList.remove("unplaceable"));
 //   }
 
-    // isEmptySpace(tile) {
-    //     return tile === null;
-    //   }
+// isEmptySpace(tile) {
+//     return tile === null;
+//   }

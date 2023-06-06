@@ -89,8 +89,15 @@ const p1b = [
   [null, null, null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, new ShipPart(ships1[3]), new ShipPart(ships1[3]), new ShipPart(ships1[3])],
 ];
+
+p1b[0][0].hit()
+p1b[0][1].hit()
+
+p1b[9][7].hit()
+// p1b[9][8].hit()
+p1b[9][9].hit()
 
 const p2b = [
   [
@@ -115,3 +122,6 @@ const p2b = [
   [null, null, null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null, null, null],
 ];
+
+p2b[0][0].hit()
+p2b[0][1].hit()
