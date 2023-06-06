@@ -73,6 +73,28 @@ export default class GamePlayUI {
     }
   }
 
+  renderMiss(playerOneBoard, playerTwoBoard) {
+    const sides = ["leftSide", "rightSide"];
+    const boards = [playerOneBoard, playerTwoBoard];
+    for (let board = 0; board < boards.length; board++) {
+      const currentSide = sides[board];
+      for (let row = 0; row < boards[board].length; row++) {
+        for (let index = 0; index < boards[board][row].length; index++) {
+          let tile = boards[board][row][index];
+
+          const wasMiss = this.confirmWasMiss(tile);
+          if (wasMiss) {
+            tile = this.getTile([row, index], currentSide);
+            const isMissClass = this.hasMissClass(tile);
+            if (!isMissClass) {
+              tile.classList.add("missed");
+            }
+          }
+        }
+      }
+    }
+  }
+
   renderPlayerOneShips(playerOneBoard) {
     for (let row = 0; row < playerOneBoard.length; row++) {
       for (let index = 0; index < playerOneBoard[row].length; index++) {
@@ -92,7 +114,7 @@ export default class GamePlayUI {
     return tile.classList.contains("hit");
   }
 
-  hasMissClass() {
+  hasMissClass(tile) {
     return tile.classList.contains("missed");
   }
 
@@ -102,6 +124,10 @@ export default class GamePlayUI {
 
   confirmWasHit(shipPart) {
     return shipPart.wasHit;
+  }
+
+  confirmWasMiss(tile) {
+    return tile === "M";
   }
 
   getTile(coordinates, side) {
@@ -117,11 +143,6 @@ export default class GamePlayUI {
   setPlayerTiles() {
     this.playerOneTiles = document.querySelectorAll(".leftSide .tile");
     this.playerTwoTiles = document.querySelectorAll(".rightSide .tile");
-  }
-
-  renderMiss() {
-    // const tile = document.querySelector(".tile")
-    // tile.classList.add('hit')
   }
 
   renderGameOver() {}
