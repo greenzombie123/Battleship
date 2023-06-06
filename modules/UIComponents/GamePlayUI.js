@@ -20,13 +20,29 @@ export default class GamePlayUI {
     this.playerOneBoard = state.playerOneBoard;
     this.playerTwoBoard = state.playerTwoBoard;
     this.currentPlayerBoard = state.currentPlayerBoard;
+    const tiles = this.getAllTiles()
+    this.registerMouseClickEventListeners(tiles)
+    this.renderPlayerOneShips(this.playerOneBoard)
 
     this.render()
   }
 
+  getAllTiles() {
+    return document.querySelectorAll(".tile");
+  }
+
+  registerMouseClickEventListeners(tiles) {
+    tiles.forEach((tile) => {
+      tile.addEventListener("click", (event) => {
+        const coordinates = this.getCoordinates(event.currentTarget)
+        this.makeAttack(coordinates)
+      });
+    });
+  }
+
   render() {
     this.renderMiss()
-    this.renderPlayerOneShips(this.playerOneBoard)
+    this.renderHit()
   }
 
   renderHit() {}
@@ -70,9 +86,15 @@ export default class GamePlayUI {
   /*
     renderGame event
     */
-  makeAttack(coordinates) {}
+  makeAttack(coordinates) {
+    console.log(coordinates);
+  }
 
-  getCoordinates(event) {}
+  getCoordinates(tile) {
+    const coordinate = tile.dataset.number;
+    // Change string to number
+    return [+coordinate[0], +coordinate[1]];
+  }
 
   switchBoard() {}
 }
