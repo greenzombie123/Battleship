@@ -1,3 +1,4 @@
+import makeGameBoard from "../GameBoard.js";
 import ShipPart from "../ShipPart.js";
 
 export default class GamePlayUI {
@@ -19,15 +20,23 @@ export default class GamePlayUI {
     render
     */
   initiate(state) {
+    this.resetTiles();
+    makeGameBoard()
     this.playerOneBoard = state.playerOneBoard;
     this.playerTwoBoard = state.playerTwoBoard;
     this.currentPlayerBoard = state.currentPlayerBoard;
     const tiles = this.getAllTiles();
     this.registerMouseClickEventListeners(tiles);
     this.renderPlayerOneShips(this.playerOneBoard);
-    this.setPlayerTiles();
+    // this.setPlayerTiles();
 
     this.render();
+  }
+
+  setGameState({ playerOneBoard, playerTwoBoard, currentPlayerBoard }) {
+    this.playerOneBoard = playerOneBoard;
+    this.playerTwoBoard = playerTwoBoard;
+    this.currentPlayerBoard = currentPlayerBoard;
   }
 
   getAllTiles() {
@@ -136,10 +145,10 @@ export default class GamePlayUI {
     return document.querySelectorAll(".tile");
   }
 
-  setPlayerTiles() {
-    this.playerOneTiles = document.querySelectorAll(".leftSide .tile");
-    this.playerTwoTiles = document.querySelectorAll(".rightSide .tile");
-  }
+  //   setPlayerTiles() {
+  //     this.playerOneTiles = document.querySelectorAll(".leftSide .tile");
+  //     this.playerTwoTiles = document.querySelectorAll(".rightSide .tile");
+  //   }
 
   renderGameOver() {}
 
@@ -147,11 +156,19 @@ export default class GamePlayUI {
 
   clearShips() {}
 
+  resetTiles() {
+    const tiles = document.querySelectorAll(".board .tile");
+    for (let tile = 0; tile < tiles.length; tile++) {
+      tiles[tile].remove();
+    }
+  }
+
   /*
     renderGame event
     */
   makeAttack(coordinates) {
-    console.log(coordinates);
+    // this.game.makeAttack(coordinates)
+    // console.log(coordinates);
   }
 
   getCoordinates(tile) {

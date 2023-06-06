@@ -35,6 +35,11 @@ export default class GameUI {
       this.shipPlacementUI.render();
     });
 
+    this.eventEmitter.on("attackMade", (board)=>{
+      this.gamePlayUI.setGameState(board)
+      this.gamePlayUI.render()
+    })
+
     //! ShipPlacement Testing
     // // this.game.state.playerOneBoard = p1b
     // // this.game.state.playerTwoBoard = p2b
@@ -123,5 +128,5 @@ const p2b = [
   [null, null, null, null, null, null, null, null, null, null],
 ];
 
-p2b[0][0].hit()
-p2b[0][1].hit()
+// p2b[0][0].hit()
+// p2b[0][1].hit()

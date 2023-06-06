@@ -347,6 +347,7 @@ export default class Game {
 
   validateAttack(coordinates, state) {
     if (!this.isStagePlay(state.stage)) return false;
+    //! Check coordinates in correct board
     if (this.isOffBoard(coordinates)) return false;
     if (this.wasPreviousMiss(state, coordinates)) return false;
     return true;
@@ -371,8 +372,15 @@ export default class Game {
     const wasHit = this.confirmWasHit(shipPart);
     if (wasHit) return;
     shipPart.hit();
+    
     this.removeSunkShips(state);
     this.switchPlayerBoard(state);
+
+    this.eventEmitter.emit("attackMade", {
+      playerOneBoard: this.playerOneBoard,
+      playerTwoBoard: this.playerTwoBoard,
+      currentBoard: this.currentPlayerBoard,
+    });
     const isWinner = this.checkWinner(state);
     if (isWinner) this.setWinner();
   }
