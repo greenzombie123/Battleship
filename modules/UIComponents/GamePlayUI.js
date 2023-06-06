@@ -24,7 +24,6 @@ export default class GamePlayUI {
     makeGameBoard()
     this.playerOneBoard = state.playerOneBoard;
     this.playerTwoBoard = state.playerTwoBoard;
-    this.currentPlayerBoard = state.currentPlayerBoard;
     const tiles = this.getAllTiles();
     this.registerMouseClickEventListeners(tiles);
     this.renderPlayerOneShips(this.playerOneBoard);
@@ -36,7 +35,7 @@ export default class GamePlayUI {
   setGameState({ playerOneBoard, playerTwoBoard, currentPlayerBoard }) {
     this.playerOneBoard = playerOneBoard;
     this.playerTwoBoard = playerTwoBoard;
-    this.currentPlayerBoard = currentPlayerBoard;
+    this.currentSide = currentPlayerBoard === "playerOneBoard" ? "leftSide" : "rightSide"
   }
 
   getAllTiles() {
@@ -46,8 +45,11 @@ export default class GamePlayUI {
   registerMouseClickEventListeners(tiles) {
     tiles.forEach((tile) => {
       tile.addEventListener("click", (event) => {
-        const coordinates = this.getCoordinates(event.currentTarget);
-        this.makeAttack(coordinates);
+        const isCurrentBoard = this.validateCurrentPlayerBoard(event.currentTarget)
+        if(isCurrentBoard){
+            const coordinates = this.getCoordinates(event.currentTarget);
+            this.makeAttack(coordinates);
+        }
       });
     });
   }
@@ -168,13 +170,20 @@ export default class GamePlayUI {
     */
   makeAttack(coordinates) {
     // this.game.makeAttack(coordinates)
-    // console.log(coordinates);
+    console.log(coordinates);
   }
 
   getCoordinates(tile) {
     const coordinate = tile.dataset.number;
     // Change string to number
     return [+coordinate[0], +coordinate[1]];
+  }
+
+  validateCurrentPlayerBoard(tile) {
+    const isCurrentPlayerBoard = tile.parentNode.parentNode.classList.contains(
+      this.currentSide
+    );
+    return isCurrentPlayerBoard;
   }
 
   switchBoard() {}

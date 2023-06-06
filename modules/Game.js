@@ -347,7 +347,6 @@ export default class Game {
 
   validateAttack(coordinates, state) {
     if (!this.isStagePlay(state.stage)) return false;
-    //! Check coordinates in correct board
     if (this.isOffBoard(coordinates)) return false;
     if (this.wasPreviousMiss(state, coordinates)) return false;
     return true;
