@@ -2,32 +2,23 @@ import makeGameBoard from "../GameBoard.js";
 import ShipPart from "../ShipPart.js";
 
 export default class GamePlayUI {
-  constructor(game) {
+  constructor(game, selectionUI) {
     this.game = game;
     this.playerOneBoard = null;
     this.playerTwoBoard = null;
-    this.playerOneTiles = null;
-    this.playerTwoTiles = null;
     this.currentPlayerBoard = null;
     this.currentSide = "rightSide";
+    this.selectionUI = selectionUI
   }
 
-  /*
-    Once all ships have been placed, emit StartGame event
-    Call initiate
-    clear all colored tiles from ship placement tage
-    Initiate gets playerone and playertwo board
-    render
-    */
+
   initiate(state) {
     this.resetTiles();
-    makeGameBoard()
-    this.playerOneBoard = state.playerOneBoard;
-    this.playerTwoBoard = state.playerTwoBoard;
+    makeGameBoard();
+    this.setGameState(state)
     const tiles = this.getAllTiles();
     this.registerMouseClickEventListeners(tiles);
     this.renderPlayerOneShips(this.playerOneBoard);
-    // this.setPlayerTiles();
 
     this.render();
   }
@@ -35,7 +26,8 @@ export default class GamePlayUI {
   setGameState({ playerOneBoard, playerTwoBoard, currentBoard }) {
     this.playerOneBoard = playerOneBoard;
     this.playerTwoBoard = playerTwoBoard;
-    this.currentSide = currentBoard === "playerOneBoard" ? "leftSide" : "rightSide"
+    this.currentSide =
+      currentBoard === "playerOneBoard" ? "leftSide" : "rightSide";
   }
 
   getAllTiles() {
@@ -45,11 +37,13 @@ export default class GamePlayUI {
   registerMouseClickEventListeners(tiles) {
     tiles.forEach((tile) => {
       tile.addEventListener("click", (event) => {
-        const isCurrentBoard = this.validateCurrentPlayerBoard(event.currentTarget)
+        const isCurrentBoard = this.validateCurrentPlayerBoard(
+          event.currentTarget
+        );
         // console.log(isCurrentBoard);
-        if(isCurrentBoard){
-            const coordinates = this.getCoordinates(event.currentTarget);
-            this.makeAttack(coordinates);
+        if (isCurrentBoard) {
+          const coordinates = this.getCoordinates(event.currentTarget);
+          this.makeAttack(coordinates);
         }
       });
     });
@@ -170,7 +164,7 @@ export default class GamePlayUI {
     renderGame event
     */
   makeAttack(coordinates) {
-    this.game.makeAttack(coordinates)
+    this.game.makeAttack(coordinates);
     // console.log(coordinates);
   }
 
@@ -187,15 +181,48 @@ export default class GamePlayUI {
     return isCurrentPlayerBoard;
   }
 
-  switchBoard() {}
+  resetUI() {
+    let mainContainer = document.querySelector(".mainContainer");
+
+    const newContainer = mainContainer.cloneNode(false)
+
+    mainContainer.remove()
+    document.body.appendChild(newContainer)
+
+    const string = `<h1 class="title">BattleShip</h1>
+    <div class="boardContainer">
+      <div class="leftSide side">
+          <div class="board"></div>
+      </div>
+      <div class="rightSide side">
+          <div class="board"></div>
+      </div>
+    </div>`;
+
+    newContainer.insertAdjacentHTML("afterbegin", string);
+  }
+
+  resetGame() {
+    this.resetUI()
+    this.game.resetGame()
+    this.selectionUI.render()
+  }
+
+  renderWinner(winner) {
+    const string = `<div class="winnerContainer">
+    <div class="winnerDisplay">${winner}</div>
+    <button class="resetButton">
+      New Game
+    </button>
+  </div>`;
+
+    const mainContainer = document.querySelector(".mainContainer");
+
+    mainContainer.insertAdjacentHTML("afterbegin", string);
+
+    const button = document.querySelector(".resetButton");
+
+    button.addEventListener("click", () => this.resetGame());
+  }
 }
 
-// clearAllHighlighted() {
-//     const tiles = document.querySelectorAll(".tile");
-//     tiles.forEach((tile) => tile.classList.remove("highlighted"));
-//     tiles.forEach((tile) => tile.classList.remove("unplaceable"));
-//   }
-
-// isEmptySpace(tile) {
-//     return tile === null;
-//   }

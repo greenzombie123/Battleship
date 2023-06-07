@@ -5,6 +5,7 @@ import ShipPlacementUI from "./UIComponents/ShipPlacement.js";
 import ShipPart from "./ShipPart.js";
 import Game from "./Game.js";
 import Ship from "./Ship.js";
+import makeGameBoard from "./GameBoard.js";
 
 export default class GameUI {
   constructor() {
@@ -12,10 +13,11 @@ export default class GameUI {
     this.game = new Game(this.eventEmitter);
     this.selectionUI = new SelectionUI(this.game);
     this.shipPlacementUI = new ShipPlacementUI(this.game);
-    this.gamePlayUI = new GamePlayUI(this.game);
+    this.gamePlayUI = new GamePlayUI(this.game, this.selectionUI);
   }
 
   initiate() {
+
     this.eventEmitter.on("startShipPlacement", (state) => {
       this.shipPlacementUI.initiate(state);
     });
@@ -35,29 +37,38 @@ export default class GameUI {
       this.shipPlacementUI.render();
     });
 
+    this.eventEmitter.on('startGame', (state)=>{
+      this.gamePlayUI.initiate(state)
+    })
+
     this.eventEmitter.on("attackMade", (board) => {
-      // console.log(board);
       this.gamePlayUI.setGameState(board);
       this.gamePlayUI.render();
     });
 
+    this.eventEmitter.on("gameOver", (string)=>{
+      this.gamePlayUI.renderWinner(string)
+    })
+
+    this.selectionUI.render()
+
     //! ShipPlacement Testing
-    // // this.game.state.playerOneBoard = p1b
-    // // this.game.state.playerTwoBoard = p2b
+    // this.game.state.playerOneBoard = p1b
+    // this.game.state.playerTwoBoard = p2b
     // this.game.state.opponent = "human";
     // this.game.state.stage = "placement";
     // // this.selectionUI.render();
     // this.shipPlacementUI.initiate(this.game.state);
 
     //! Game Play Testing
-    this.game.state.playerOneBoard = p1b;
-    this.game.state.playerTwoBoard = p2b;
-    this.game.state.playerOneShips = [ships1[3], ships1[4]];
-    this.game.state.playerTwoShips = [ships2[4]];
-    this.game.state.opponent = "human";
-    this.game.state.stage = "play";
-    this.game.state.currentPlayerBoard = "playerTwoBoard"
-    this.gamePlayUI.initiate(this.game.state);
+    // this.game.state.playerOneBoard = p1b;
+    // this.game.state.playerTwoBoard = p2b;
+    // this.game.state.playerOneShips = [ships1[3], ships1[4]];
+    // this.game.state.playerTwoShips = [ships2[4]];
+    // this.game.state.opponent = "human";
+    // this.game.state.stage = "play";
+    // this.game.state.currentPlayerBoard = "playerTwoBoard"
+    // this.gamePlayUI.initiate(this.game.state);
   }
 }
 

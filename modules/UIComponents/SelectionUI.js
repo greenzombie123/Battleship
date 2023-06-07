@@ -1,3 +1,5 @@
+import makeGameBoard from "../GameBoard.js";
+
 export default class SelectionUI {
   constructor(game) {
     this.game = game
@@ -9,8 +11,10 @@ export default class SelectionUI {
         <button class="selectionButton">Human</button>
         <button class="selectionButton">Computer</button>
       </div>`;
-    const mainContaier = document.querySelector('.mainContainer')
-    mainContaier.insertAdjacentHTML("beforeend", string)
+    const mainContainer = document.querySelector('.mainContainer')
+    mainContainer.insertAdjacentHTML("beforeend", string)
+
+    makeGameBoard()
 
     const buttons = this.getButtons()
 

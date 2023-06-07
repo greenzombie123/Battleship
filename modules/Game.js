@@ -120,6 +120,7 @@ export default class Game {
       // console.log(this.state);
       if (this.canStartGame(placeableShips)) {
         this.startGame();
+        this.eventEmitter.emit("startGame", this.state)
       }
     }
   }
@@ -342,6 +343,7 @@ export default class Game {
       this.setState({ gameStatus: "Player One is Winner" });
     if (playerTwoShips.length === 0)
       this.setState({ gameStatus: "Player Two is Winner" });
+    this.eventEmitter.emit("gameOver", this.state.gameStatus)
   }
 
   validateAttack(coordinates, state) {

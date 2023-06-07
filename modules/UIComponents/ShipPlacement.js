@@ -6,7 +6,7 @@ export default class ShipPlacementUI {
     this.currentDirection = null;
     this.direction = null;
     this.currentPlayerBoard = null;
-    this.currentSide = "leftSide";
+    this.currentSide = null;
     this.currentTile = null;
     this.game = game;
   }
@@ -32,6 +32,7 @@ export default class ShipPlacementUI {
     this.registerMouseEnterEventListeners(tiles);
     this.registerKeyDownEventListeners();
     this.registerMouseClickEventListeners(tiles);
+    this.currentSide = "leftSide";
 
     this.render();
   }

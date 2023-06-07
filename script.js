@@ -2,7 +2,7 @@ import GameUI from "./modules/GameUI.js";
 import makeGameBoard from "./modules/GameBoard.js";
 
 // const game = init()
-makeGameBoard()
+// makeGameBoard()
 const gameUi = new GameUI()
 gameUi.initiate()
 

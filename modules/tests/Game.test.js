@@ -487,7 +487,7 @@ describe("checkWinner", () => {
 
 describe("setGameStatus", () => {
   test("Set gameStatus state prop to 'Player One is Winner' if playerTwoShip array is empty", () => {
-    const game = init();
+    const game = new Game(new EventEmitter());
     game.state.playerTwoShips = [1];
     game.state.playerOneShips = [];
     game.setGameStatus(game.state);
@@ -495,7 +495,7 @@ describe("setGameStatus", () => {
   });
 
   test("Set gameStatus state prop to 'Player Two is Winner' if playerOneShip array is empty", () => {
-    const game = init();
+    const game = new Game(new EventEmitter());
     game.state.playerTwoShips = [];
     game.state.playerOneShips = [1];
     game.setGameStatus(game.state);
