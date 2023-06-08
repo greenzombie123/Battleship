@@ -123,6 +123,8 @@ export default class Game {
         this.eventEmitter.emit("startGame", this.state)
       }
     }
+
+    //! Computer AI
   }
 
   getAllShipCoordinates(ship, direction, coordinates, state) {
