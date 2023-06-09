@@ -5,12 +5,14 @@ import ShipPlacementUI from "./UIComponents/ShipPlacement.js";
 import ShipPart from "./ShipPart.js";
 import Game from "./Game.js";
 import Ship from "./Ship.js";
+import ComputerAI from "./AI.js";
 import makeGameBoard from "./GameBoard.js";
 
 export default class GameUI {
   constructor() {
+    this.ai = new ComputerAI()
     this.eventEmitter = new EventEmitter();
-    this.game = new Game(this.eventEmitter);
+    this.game = new Game(this.eventEmitter, this.ai);
     this.selectionUI = new SelectionUI(this.game);
     this.shipPlacementUI = new ShipPlacementUI(this.game);
     this.gamePlayUI = new GamePlayUI(this.game, this.selectionUI);
@@ -23,6 +25,7 @@ export default class GameUI {
     });
 
     this.eventEmitter.on("changeDirection", (currentDirection, direction) => {
+      console.log(currentDirection, direction);
       this.shipPlacementUI.setCurrentDirection(currentDirection, direction);
     });
 

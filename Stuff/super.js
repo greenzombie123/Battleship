@@ -3,4 +3,4 @@ const j = {a:true, b:[]}
 
 const a = {...g, ...j}
 
-a
+console.log(g["a"]);

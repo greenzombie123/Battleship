@@ -1,11 +1,20 @@
 export default class ComputerAI {
   constructor() {}
 
-  canComputerPlaceShip({ currentPlayerBoard }) {
-    return currentPlayerBoard === "playerTwoBoard";
+  canComputerPlaceShip(placeableShips) {
+    return placeableShips.length === 5;
   }
 
-  computerPlaceShip() {}
+  computerPlaceShip(state, game) {
+    // console.log(state);
+    for (let index = 0; index < 5; index++) {
+      const ship = this.generateValidCoordinates(state);
+        console.log(ship);
+        this.changeDirection(ship.direction, game);
+        game.placeShip(ship.coordinates);
+      //   console.log(game.state.playerTwoBoard);
+    }
+  }
 
   generateRandomCoordinate() {
     const coordinate = [];
@@ -15,19 +24,31 @@ export default class ComputerAI {
   }
 
   getCurrentShip({ placeableShips }) {
-    return placeableShips.pop();
+    return placeableShips[placeableShips.length - 1];
+  }
+
+  changeDirection(direction, game) {
+    let { currentDirection } = game.state;
+    while (currentDirection !== direction) {
+      game.changeDirection(currentDirection);
+      currentDirection = game.state.currentDirection;
+    }
   }
 
   getDirection() {
-    const directions = [
-      [0, 1],
-      [-1, 0],
-      [0, -1],
-      [1, 0],
-    ];
-    const randomNum = Math.floor(Math.random() * 4)
+    const directions = {
+      right: [0, 1],
+      up: [-1, 0],
+      left: [0, -1],
+      down: [1, 0],
+    };
+    const direct = ["right", "up", "left", "down"];
+    const randomNum = Math.floor(Math.random() * 4);
 
-    return directions[randomNum]
+    return {
+      direct: direct[randomNum],
+      directions: directions[direct[randomNum]],
+    };
   }
 
   getShipCoordinates(coordinates, direction, ship) {
@@ -43,13 +64,52 @@ export default class ComputerAI {
     return coorArray;
   }
 
-  validateCoordinates() {}
+  validateCoordinates(coordinates, playerTwoBoard) {
+    return coordinates.every(
+      (coor) =>
+        !this.isOffBoard(coor) && !this.isOverlapping(playerTwoBoard, coor)
+    );
+  }
 
-  generateValidCoordinates(state) {}
+  generateValidCoordinates(state) {
+    let isNotValid;
+    let shipCoordinates;
+    let direction;
+    let randomCoor;
 
-  isOverlapping() {}
+    while (!isNotValid) {
+      randomCoor = this.generateRandomCoordinate();
+      const currentShip = this.getCurrentShip(state);
+      direction = this.getDirection();
+      shipCoordinates = this.getShipCoordinates(
+        randomCoor,
+        direction["directions"],
+        currentShip
+      );
+      isNotValid = this.validateCoordinates(
+        shipCoordinates,
+        state.playerTwoBoard
+      );
+    }
+    return { coordinates: randomCoor, direction: direction["direct"] };
+  }
 
-  isOffBoard() {}
+  isOverlapping(playerTwoBoard, coordinates) {
+    const [y, x] = coordinates;
+    if (playerTwoBoard[y][x] !== null) return true;
+    return false;
+  }
+
+  isOffBoard(coordinates) {
+    if (
+      coordinates[0] >= 0 &&
+      coordinates[0] <= 9 &&
+      coordinates[1] >= 0 &&
+      coordinates[1] <= 9
+    )
+      return false;
+    return true;
+  }
 }
 
 /*

@@ -19,6 +19,8 @@ export default class GamePlayUI {
     const tiles = this.getAllTiles();
     this.registerMouseClickEventListeners(tiles);
     this.renderPlayerOneShips(this.playerOneBoard);
+    //! Testing
+    this.renderPlayerTwoShips(this.playerTwoBoard)
 
     this.render();
   }
@@ -107,6 +109,18 @@ export default class GamePlayUI {
         if (this.isShipPart(playerOneBoard[row][index])) {
           const tile = this.getTile([row, index], "leftSide");
           tile.classList.add("playerOneTile");
+        }
+      }
+    }
+  }
+
+  //! Testing
+  renderPlayerTwoShips(playerTwoBoard) {
+    for (let row = 0; row < playerTwoBoard.length; row++) {
+      for (let index = 0; index < playerTwoBoard[row].length; index++) {
+        if (this.isShipPart(playerTwoBoard[row][index])) {
+          const tile = this.getTile([row, index], "rightSide");
+          tile.classList.add("playerTwoTile");
         }
       }
     }

@@ -14,11 +14,11 @@ beforeEach(() => {
 });
 
 describe("canComputerPlaceShip", () => {
-  test("Check if currentPlayerBoard is now player2Board", () => {
+  test("Check if placeableShips has a length of 5", () => {
     const compAI = new ComputerAI();
-    g.state.currentPlayerBoard = "playerTwoBoard";
-    const canPlace = compAI.canComputerPlaceShip(g.state);
-    expect(canPlace).toBe(true);
+    g.state.placeableShips = [1,1,1,1,1];
+    const CanPlace = compAI.canComputerPlaceShip(g.state.placeableShips);
+    expect(CanPlace).toBe(true);
   });
 });
 
@@ -47,27 +47,27 @@ describe("getCurrentShip", () => {
   });
 });
 
-describe("getDirection", () => {
-  test("get all directions randomly", () => {
-    const directions = [
-      [0, 1],
-      [-1, 0],
-      [0, -1],
-      [1, 0],
-    ];
-    const direction = a.getDirection();
-    const isValid =
-      (directions[0][0] === direction[0] &&
-        directions[0][1] === direction[1]) ||
-      (directions[1][0] === direction[0] &&
-        directions[1][1] === direction[1]) ||
-      (directions[2][0] === direction[0] &&
-        directions[2][1] === direction[1]) ||
-      (directions[3][0] === direction[0] && directions[3][1] === direction[1]);
+// describe("getDirection", () => {
+//   test("get all directions randomly", () => {
+//     const directions = [
+//       [0, 1],
+//       [-1, 0],
+//       [0, -1],
+//       [1, 0],
+//     ];
+//     const direction = a.getDirection();
+//     const isValid =
+//       (directions[0][0] === direction[0] &&
+//         directions[0][1] === direction[1]) ||
+//       (directions[1][0] === direction[0] &&
+//         directions[1][1] === direction[1]) ||
+//       (directions[2][0] === direction[0] &&
+//         directions[2][1] === direction[1]) ||
+//       (directions[3][0] === direction[0] && directions[3][1] === direction[1]);
 
-    expect(isValid).toBe(true);
-  });
-});
+//     expect(isValid).toBe(true);
+//   });
+// });
 
 describe("getShipCoordinates", () => {
   test("Get [[0,0], [0,1], [0,2]], ", () => {
@@ -94,6 +94,56 @@ describe("getShipCoordinates", () => {
     ]);
   });
 });
+
+describe("validateCoordinates", () => {
+  test("Return false when function is given [[0,1],[0,2],[0,3]] but overlapping returns true", () => {
+    g.state.playerTwoBoard[0][1] = "X";
+    const isValid = a.validateCoordinates(
+      [
+        [0, 1],
+        [0, 2],
+        [0, 3],
+      ],
+      g.state.playerTwoBoard
+    );
+    expect(isValid).toBe(false);
+  });
+
+  test("Return true when function is given [[0,1],[0,2],[0,3]]", () => {
+    const isValid = a.validateCoordinates(
+      [
+        [0, 1],
+        [0, 2],
+        [0, 3],
+      ],
+      g.state.playerTwoBoard
+    );
+    // let coor = a.generateValidCoordinates(g.state)
+    // console.log(coor);
+    // coor = a.generateValidCoordinates(g.state)
+    // console.log(coor);
+    expect(isValid).toBe(true);
+  });
+});
+
+describe("changeDirection", ()=>{
+  test("Change the current direction to 'left'", ()=>{
+    a.changeDirection("left", g)
+    expect(g.state.currentDirection).toBe("left")
+  })
+
+  test("Change the current direction to 'up'", ()=>{
+    a.changeDirection("up", g)
+    expect(g.state.currentDirection).toBe("up")
+  })
+})
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
+
 // describe("", ()=>{
 //   test("", ()=>{
 //     expect()

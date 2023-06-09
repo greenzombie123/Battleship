@@ -189,13 +189,16 @@ export default class ShipPlacementUI {
     });
   }
 
+  rotateShip = (event) => {
+    if (event.key === "c") {
+      this.changeDirection();
+      this.highlightShip();
+    }
+  };
+
   registerKeyDownEventListeners() {
-    document.body.addEventListener("keydown", (event) => {
-      if (event.key === "c") {
-        this.changeDirection();
-        this.highlightShip();
-      }
-    });
+    document.body.removeEventListener("keydown", this.rotateShip);
+    document.body.addEventListener("keydown", this.rotateShip);
   }
 
   registerMouseClickEventListeners(tiles) {

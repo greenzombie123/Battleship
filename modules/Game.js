@@ -3,7 +3,7 @@ import Ship from "./Ship.js";
 import ShipPart from "./ShipPart.js";
 
 export default class Game {
-  constructor(eventEmitter) {
+  constructor(eventEmitter, ai) {
     this.state = {
       stage: "selection",
       opponent: null,
@@ -23,6 +23,7 @@ export default class Game {
       gameStatus: null,
     };
     this.eventEmitter = eventEmitter;
+    this.ai = ai;
   }
 
   setState(newState) {
@@ -117,20 +118,21 @@ export default class Game {
         this.eventEmitter.emit("boardSwitched", this.state);
       }
 
-      // console.log(this.state);
       if (this.canStartGame(placeableShips)) {
         this.startGame();
-        this.eventEmitter.emit("startGame", this.state)
+        this.eventEmitter.emit("startGame", this.state);
       }
     }
-
+    // console.log(this.state, this);
     //! Computer AI
+    if (this.ai.canComputerPlaceShip(this.state.placeableShips))
+      this.ai.computerPlaceShip(this.state, this);
   }
 
   getAllShipCoordinates(ship, direction, coordinates, state) {
     const { size } = ship;
     const { currentPlayerBoard } = state;
-    const board = state[currentPlayerBoard];
+    // const board = state[currentPlayerBoard];
     const coorArray = [];
     for (let index = 0; index < size; index++) {
       coorArray.push(coordinates);
@@ -243,6 +245,8 @@ export default class Game {
     }
   }
 
+  //! SetDirecion
+
   getDirection(state) {
     const { currentDirection } = state;
     return state.directions[currentDirection];
@@ -345,7 +349,7 @@ export default class Game {
       this.setState({ gameStatus: "Player One is Winner" });
     if (playerTwoShips.length === 0)
       this.setState({ gameStatus: "Player Two is Winner" });
-    this.eventEmitter.emit("gameOver", this.state.gameStatus)
+    this.eventEmitter.emit("gameOver", this.state.gameStatus);
   }
 
   validateAttack(coordinates, state) {
