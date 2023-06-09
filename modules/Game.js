@@ -125,14 +125,13 @@ export default class Game {
     }
     // console.log(this.state, this);
     //! Computer AI
-    if (this.ai.canComputerPlaceShip(this.state.placeableShips))
+    if (this.ai.canComputerPlaceShip(this.state.placeableShips) && this.state.opponent === "computer")
       this.ai.computerPlaceShip(this.state, this);
   }
 
   getAllShipCoordinates(ship, direction, coordinates, state) {
     const { size } = ship;
     const { currentPlayerBoard } = state;
-    // const board = state[currentPlayerBoard];
     const coorArray = [];
     for (let index = 0; index < size; index++) {
       coorArray.push(coordinates);
