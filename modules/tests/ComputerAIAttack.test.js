@@ -41,6 +41,14 @@ describe("hasMiss", () => {
   });
 });
 
+describe("isOffBoard", () => {
+  test("Return false is coordinate does not go off board", () => {
+    const coordinates = [0, 0];
+    const isOffBoard = a.isOffBoard(coordinates);
+    expect(isOffBoard).toBe(false);
+  });
+});
+
 describe("hasMiss", () => {
   test("Returns false if the tile on the board has no 'M'", () => {
     g.state.playerOneBoard[0][0] = null;
@@ -50,6 +58,125 @@ describe("hasMiss", () => {
     expect(isMiss).toBe(false);
   });
 });
+
+describe("setMadeFirstHit", () => {
+  test("Assign true to MadeFirstHit property", () => {
+    a.setMadeFirstHit();
+    const { madeFirstHit } = a;
+    expect(madeFirstHit).toBe(true);
+  });
+});
+
+describe("setAdjacentCoordinates", () => {
+  test("Return an object ({left:[1,0], right:[1,2], up:[0,1], down:[2,1]} when given a coordinate of [1,1])", () => {
+    g.state.playerOneBoard[1][0] = null;
+    g.state.playerOneBoard[1][2] = null;
+    g.state.playerOneBoard[0][1] = null;
+    g.state.playerOneBoard[2][1] = null;
+    const { playerOneBoard } = g.state;
+    const adjacentCoordinates = a.setAdjacentCoordinates(
+      [1, 1],
+      playerOneBoard
+    );
+    expect(adjacentCoordinates).toEqual({
+      left: [1, 0],
+      right: [1, 2],
+      up: [0, 1],
+      down: [2, 1],
+    });
+  });
+});
+
+describe("setAdjacentCoordinates", () => {
+  test("Return an object ({right:[1,1], up:[0,0], down:[2,0]} when given a coordinate of [1,0])", () => {
+    const { playerOneBoard } = g.state;
+    const adjacentCoordinates = a.setAdjacentCoordinates(
+      [1, 0],
+      playerOneBoard
+    );
+    expect(adjacentCoordinates).toEqual({
+      right: [1, 1],
+      up: [0, 0],
+      down: [2, 0],
+    });
+  });
+});
+
+describe("setAdjacentCoordinates", () => {
+  test("Return an object ({left:[1,0], up:[0,1], down:[2,1]} when given a coordinate of [1,0]). Right is omitted because a 'M' is present", () => {
+    g.state.playerOneBoard[1][2] = "M";
+    const { playerOneBoard } = g.state;
+    const adjacentCoordinates = a.setAdjacentCoordinates(
+      [1, 1],
+      playerOneBoard
+    );
+    expect(adjacentCoordinates).toEqual({
+      left: [1, 0],
+      up: [0, 1],
+      down: [2, 1],
+    });
+  });
+});
+
+describe("", () => {
+  test("", () => {
+    expect();
+  });
+});
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
 
 // describe("", ()=>{
 //   test("", ()=>{
