@@ -1,5 +1,9 @@
-export default class ComputerAI {
-  constructor() {}
+import ComputerAIAttack from "./ComputerAIAttack.js";
+
+export default class ComputerAI extends ComputerAIAttack{
+  constructor() {
+    super()
+  }
 
   canComputerPlaceShip(placeableShips) {
     return placeableShips.length === 5;
