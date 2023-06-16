@@ -384,6 +384,13 @@ export default class Game {
     if (wasHit) return;
     shipPart.hit();
 
+    //TODO event hitComfirmed
+    /*
+    if(isComputerAttackTurn(arg)){
+      this.game.eventEmitter.emit("hitConfirmed", this.state)
+    }
+    */
+
     this.removeSunkShips(state);
     this.switchPlayerBoard(state);
 
@@ -396,6 +403,13 @@ export default class Game {
     const isWinner = this.checkWinner(this.state);
     console.log(isWinner);
     if (isWinner) this.setWinner();
+
+    //TODO AI attacks if it is its turn
+    /*
+    if(isComputerAttackTurn(arg)){
+      this.game.ai.computerMakeAttack()
+    }
+    */
   }
 
   resetGame() {

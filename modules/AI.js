@@ -6,13 +6,11 @@ export default class ComputerAI {
   }
 
   computerPlaceShip(state, game) {
-    // console.log(state);
+    //TODO Check if opponent is the computer
     for (let index = 0; index < 5; index++) {
       const ship = this.generateValidCoordinates(state);
-        console.log(ship);
         this.changeDirection(ship.direction, game);
         game.placeShip(ship.coordinates);
-      //   console.log(game.state.playerTwoBoard);
     }
   }
 
@@ -112,27 +110,4 @@ export default class ComputerAI {
   }
 }
 
-/*
 
-canComputerPlaceShip(){}
-
-computerPlaceShip(){
-    Check if only 5 ships or current board is now player2Board
-    Call placeship 5 times
-}
-
-generateRandomCoordinate(){}
-getCurrentShip(){}
-getDirection(){}
-getShipCoordinates(){}
-validateCoordinate(){}
-generateValidCoordinates(state){}
-
-isOverlapping
-isOffBoard
-
-
-
-
-
-*/
