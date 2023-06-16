@@ -9,4 +9,17 @@ export default class ComputerAIAttack {
     this.followingCoordinates = null;
     this.currentFollowingCoordinates = {};
   }
+
+  computerMakeAttack(){}
+
+  attackRandomTile(){
+    const coordinate = [];
+    coordinate[0] = Math.floor(Math.random() * 10);
+    coordinate[1] = Math.floor(Math.random() * 10);
+    return coordinate;
+  }
+
+  setFirstHitCoordinates(coordinates){
+    this.firstHitCoordinates = coordinates
+  }
 }

@@ -68,7 +68,7 @@ export default class GameUI {
     // this.game.state.playerTwoBoard = p2b;
     // this.game.state.playerOneShips = [ships1[3], ships1[4]];
     // this.game.state.playerTwoShips = [ships2[4]];
-    // this.game.state.opponent = "human";
+    // this.game.state.opponent = "computer";
     // this.game.state.stage = "play";
     // this.game.state.currentPlayerBoard = "playerTwoBoard"
     // this.gamePlayUI.initiate(this.game.state);
