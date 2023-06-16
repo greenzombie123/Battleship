@@ -13,12 +13,16 @@ beforeEach(() => {
   a = new ComputerAI();
 });
 
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
 describe("attackRandomTile", () => {
   test("Generate a number array of two numbers that are not below 0 and above 9", () => {
     const { playerOneBoard } = g.state;
     const coordinates = a.attackRandomTile(playerOneBoard);
     const isYGood = coordinates[0] > -1 && coordinates[0] < 10;
-    const isXGood = coordinates[1] > -1 && coordinates[1] < 10;
+    const isXGood = coordinates[1] > -1 && coordinates[1] < 10; 
     const isValid = isXGood && isYGood;
     expect(isValid).toBe(true);
   });
@@ -118,10 +122,45 @@ describe("setAdjacentCoordinates", () => {
   });
 });
 
-describe("", () => {
-  test("", () => {
-    expect();
+describe("attackAdjacentTiles", () => {
+  test("Return an object that has a tileName property of 'left' and coordinates property of '[1,0]' ", () => {
+    const adjacentCoordinates = {
+      left: [1, 0],
+      right: [1, 2],
+      up: [0, 1],
+      down: [2, 1],
+    };
+
+    jest.spyOn(global.Math, "random").mockReturnValue(0);
+
+    const singleAdjacentCoordinates =
+      a.attackAdjacentTiles(adjacentCoordinates);
+
+    expect(singleAdjacentCoordinates).toEqual({
+      tileName: "left",
+      coordinates: [1, 0],
+    });
   });
+
+  test("Return an object that has a tileName property of 'down' and coordinates property of '[2,1]' ", () => {
+    const adjacentCoordinates = {
+      left: [1, 0],
+      right: [1, 2],
+      up: [0, 1],
+      down: [2, 1],
+    };
+
+    jest.spyOn(global.Math, "random").mockReturnValue(0.8); 
+
+    const singleAdjacentCoordinates =
+      a.attackAdjacentTiles(adjacentCoordinates);
+
+    expect(singleAdjacentCoordinates).toEqual({
+      tileName: "down",
+      coordinates: [2, 1],
+    });
+  });
+
 });
 
 // describe("", ()=>{

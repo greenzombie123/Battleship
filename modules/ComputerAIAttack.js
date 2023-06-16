@@ -30,17 +30,6 @@ export default class ComputerAIAttack {
     return playerOneBoard[y][x] === "M";
   }
 
-  // isOffBoard(coordinates) {
-  //   if (
-  //     coordinates[0] >= 0 &&
-  //     coordinates[0] <= 9 &&
-  //     coordinates[1] >= 0 &&
-  //     coordinates[1] <= 9
-  //   )
-  //     return false;
-  //   return true;
-  // }
-
   setFirstHitCoordinates(coordinates) {
     this.firstHitCoordinates = coordinates;
   }
@@ -66,4 +55,17 @@ export default class ComputerAIAttack {
 
     return adjacentCoordinates;
   }
+
+  attackAdjacentTiles(adjacentCoordinates) {
+    const randomNum = Math.floor(Math.random() * 4);
+    const tilesNames = Object.keys(adjacentCoordinates);
+    const chosenTileName = tilesNames[randomNum];
+    return {
+      tileName: chosenTileName,
+      coordinates: adjacentCoordinates[chosenTileName],
+    };
+  }
+
+  setCurrentAdjacentCoordinates(singleAdjacentCoordinate) {}
+  setPreviousAdjacentAttack(tileName) {}
 }
