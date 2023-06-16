@@ -38,7 +38,7 @@ setFirstHitCoordinates(coordinates){}
 setCurrentFollowingCoordinates(currentFollowingCoordinates){}
 
 
-changeAttackPhase(game, coordinates){
+changeAttackPhase(ship, coordinates){
     if(!this.madeFirstHit){
         this.setMadeFirstHit();
         this.setAdjacentCoordinates(coordinates)
