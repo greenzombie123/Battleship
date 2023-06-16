@@ -5,7 +5,7 @@ export default class ComputerAIAttack {
     this.firstHitCoordinates = [];
     this.adjacentCoordinates = null;
     this.currentAdjacentCoordinates = null;
-    this.previousAdjacentCoordinates = [];
+    this.previousAdjacentAttacks = [];
     this.followingCoordinates = null;
     this.currentFollowingCoordinates = {};
   }
@@ -66,6 +66,14 @@ export default class ComputerAIAttack {
     };
   }
 
-  setCurrentAdjacentCoordinates(singleAdjacentCoordinate) {}
-  setPreviousAdjacentAttack(tileName) {}
+  setCurrentAdjacentCoordinates(singleAdjacentCoordinate) {
+    this.currentAdjacentCoordinates = singleAdjacentCoordinate;
+  }
+
+  setPreviousAdjacentAttacks ({tileName}) {
+    const hasTileName = this.previousAdjacentAttacks.some(
+      (name) => tileName === name
+    );
+    if (!hasTileName) this.previousAdjacentAttacks.push(tileName);
+  }
 }

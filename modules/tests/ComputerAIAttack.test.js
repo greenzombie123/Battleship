@@ -22,7 +22,7 @@ describe("attackRandomTile", () => {
     const { playerOneBoard } = g.state;
     const coordinates = a.attackRandomTile(playerOneBoard);
     const isYGood = coordinates[0] > -1 && coordinates[0] < 10;
-    const isXGood = coordinates[1] > -1 && coordinates[1] < 10; 
+    const isXGood = coordinates[1] > -1 && coordinates[1] < 10;
     const isValid = isXGood && isYGood;
     expect(isValid).toBe(true);
   });
@@ -150,7 +150,7 @@ describe("attackAdjacentTiles", () => {
       down: [2, 1],
     };
 
-    jest.spyOn(global.Math, "random").mockReturnValue(0.8); 
+    jest.spyOn(global.Math, "random").mockReturnValue(0.8);
 
     const singleAdjacentCoordinates =
       a.attackAdjacentTiles(adjacentCoordinates);
@@ -160,20 +160,36 @@ describe("attackAdjacentTiles", () => {
       coordinates: [2, 1],
     });
   });
-
 });
 
-// describe("", ()=>{
-//   test("", ()=>{
-//     expect()
-//   })
-// })
+describe("setCurrentAdjacentCoordinates", () => {
+  test("Assign an object {tileName:'left', coordinates:[7,7]}", () => {
+    const singleAdjacentCoordinates = { tileName: "left", coordinates: [7, 7] };
+    a.setCurrentAdjacentCoordinates(singleAdjacentCoordinates);
+    const { currentAdjacentCoordinates } = a;
+    expect(currentAdjacentCoordinates).toEqual({
+      tileName: "left",
+      coordinates: [7, 7],
+    });
+  });
+});
 
-// describe("", ()=>{
-//   test("", ()=>{
-//     expect()
-//   })
-// })
+describe("setPreviousAdjacentAttacks", () => {
+  test("Insert 'left' into the previousAdjacentAttacks prop array", () => {
+    const singleAdjacentCoordinates = { tileName: "left", coordinates: [7, 7] };
+    a.setPreviousAdjacentAttacks(singleAdjacentCoordinates);
+    const { previousAdjacentAttacks } = a;
+    expect(previousAdjacentAttacks).toContain("left");
+  });
+
+  test("Don't insert 'up' into the previousAdjacentAttacks prop array because its already there", () => {
+    const singleAdjacentCoordinates = { tileName: "up", coordinates: [7, 7] };
+    a.previousAdjacentAttacks = ["right", "up"];
+    a.setPreviousAdjacentAttacks(singleAdjacentCoordinates);
+    const { previousAdjacentAttacks } = a;
+    expect(previousAdjacentAttacks).toEqual(["right", "up"]);
+  });
+});
 
 // describe("", ()=>{
 //   test("", ()=>{
