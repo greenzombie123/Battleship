@@ -320,11 +320,14 @@ describe("updateFollowingCoordinates", () => {
   });
 });
 
-// describe("", ()=>{
-//   test("", ()=>{
-//     expect()
-//   })
-// })
+describe("didShipSink", ()=>{
+  test("Return true if the ship's isSunk prop true", ()=>{
+    const ship = new Ship("Submarine", 2)
+    ship.hasSunk = true
+    const hasSunk = a.didShipSink(ship)
+    expect(hasSunk).toBe(true)
+  })
+})
 
 // describe("", ()=>{
 //   test("", ()=>{

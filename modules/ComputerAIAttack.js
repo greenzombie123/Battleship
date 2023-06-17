@@ -173,4 +173,8 @@ export default class ComputerAIAttack {
     else if (tileName === "down") followCoors.down = [y + 1, x];
     this.followingCoordinates = followCoors;
   }
+
+  didShipSink(ship){
+    return ship.hasSunk
+  }
 }
