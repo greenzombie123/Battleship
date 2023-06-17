@@ -78,10 +78,8 @@ describe("setAdjacentCoordinates", () => {
     g.state.playerOneBoard[0][1] = null;
     g.state.playerOneBoard[2][1] = null;
     const { playerOneBoard } = g.state;
-    const adjacentCoordinates = a.setAdjacentCoordinates(
-      [1, 1],
-      playerOneBoard
-    );
+    a.setAdjacentCoordinates([1, 1], playerOneBoard);
+    const { adjacentCoordinates } = a;
     expect(adjacentCoordinates).toEqual({
       left: [1, 0],
       right: [1, 2],
@@ -94,10 +92,8 @@ describe("setAdjacentCoordinates", () => {
 describe("setAdjacentCoordinates", () => {
   test("Return an object ({right:[1,1], up:[0,0], down:[2,0]} when given a coordinate of [1,0])", () => {
     const { playerOneBoard } = g.state;
-    const adjacentCoordinates = a.setAdjacentCoordinates(
-      [1, 0],
-      playerOneBoard
-    );
+    a.setAdjacentCoordinates([1, 0], playerOneBoard);
+    const { adjacentCoordinates } = a;
     expect(adjacentCoordinates).toEqual({
       right: [1, 1],
       up: [0, 0],
@@ -110,10 +106,8 @@ describe("setAdjacentCoordinates", () => {
   test("Return an object ({left:[1,0], up:[0,1], down:[2,1]} when given a coordinate of [1,0]). Right is omitted because a 'M' is present", () => {
     g.state.playerOneBoard[1][2] = "M";
     const { playerOneBoard } = g.state;
-    const adjacentCoordinates = a.setAdjacentCoordinates(
-      [1, 1],
-      playerOneBoard
-    );
+    a.setAdjacentCoordinates([1, 1], playerOneBoard);
+    const { adjacentCoordinates } = a;
     expect(adjacentCoordinates).toEqual({
       left: [1, 0],
       up: [0, 1],
@@ -195,12 +189,6 @@ describe("setMadeSecondHit", () => {
   test("Assign true to madeSecondHit prop", () => {
     a.setMadeSecondHit();
     expect(a.madeSecondHit).toBe(true);
-  });
-});
-
-describe("", () => {
-  test("", () => {
-    expect();
   });
 });
 
@@ -359,20 +347,147 @@ describe("resetCoordinates", () => {
       currentAdjacentCoordinates: null,
       previousAdjacentAttacks: [],
       followingCoordinates: null,
-      currentFollowingCoordinates: {},
+      currentFollowingCoordinates: null,
     };
+
     a.resetCoordinates();
-    expect(a).toEqual(expected);
+
+    const received = {
+      madeFirstHit: a.madeFirstHit,
+      madeSecondHit: a.madeSecondHit,
+      firstHitCoordinates: a.firstHitCoordinates,
+      adjacentCoordinates: a.adjacentCoordinates,
+      currentAdjacentCoordinates: a.currentAdjacentCoordinates,
+      previousAdjacentAttacks: a.previousAdjacentAttacks,
+      followingCoordinates: a.followingCoordinates,
+      currentFollowingCoordinates: a.currentAdjacentCoordinates,
+    };
+
+    expect(received).toEqual(expected);
   });
 });
 
-describe("isComputerAttackTurn", ()=>{
-  test("Return true if currentPlayerBoard is playerTwoBoard", ()=>{
-    const currentPlayerBoard = "playerTwoBoard"
-    const isComputerTurn = a.isComputerAttackTurn(currentPlayerBoard)
-    expect(isComputerTurn).toBe(true)
-  })
-})
+describe("isComputerAttackTurn", () => {
+  test("Return true if currentPlayerBoard is playerTwoBoard", () => {
+    const currentPlayerBoard = "playerTwoBoard";
+    const isComputerTurn = a.isComputerAttackTurn(currentPlayerBoard);
+    expect(isComputerTurn).toBe(true);
+  });
+});
+
+describe("changeAttackCoordinates", () => {
+  test("Assign true to madeFirstHit", () => {
+    const { playerOneBoard } = g.state;
+    const coordinates = [1, 1];
+    a.changeAttackCoordinates(coordinates, playerOneBoard);
+    const { madeFirstHit } = a;
+    expect(madeFirstHit).toBe(true);
+  });
+
+  test("Assign {left: [1, 0],right: [1, 2],up: [0, 1],down: [2, 1]} to adjacentCoordinates prop", () => {
+    const { playerOneBoard } = g.state;
+    const coordinates = [1, 1];
+    a.changeAttackCoordinates(coordinates, playerOneBoard);
+    const { adjacentCoordinates } = a;
+    expect(adjacentCoordinates).toEqual({
+      left: [1, 0],
+      right: [1, 2],
+      up: [0, 1],
+      down: [2, 1],
+    });
+  });
+
+  test("Assign true to madeSecondHit", () => {
+    const { playerOneBoard } = g.state;
+    const coordinates = [4, 6];
+    a.currentAdjacentCoordinates = {
+      tileName: "left",
+      coordinates: [4, 5],
+    };
+    a.firstHitCoordinates = [4, 6];
+
+    a.changeAttackCoordinates(coordinates, playerOneBoard);
+    a.changeAttackCoordinates(coordinates, playerOneBoard);
+    const { madeSecondHit } = a;
+    expect(madeSecondHit).toBe(true);
+  });
+
+  test("Assign { left: [4, 4], right: [4, 7] } to followingCoordinates", () => {
+    const { playerOneBoard } = g.state;
+    const coordinates = [4, 6];
+    a.currentAdjacentCoordinates = {
+      tileName: "left",
+      coordinates: [4, 5],
+    };
+    a.firstHitCoordinates = [4, 6];
+
+    a.changeAttackCoordinates(coordinates, playerOneBoard);
+    a.changeAttackCoordinates(coordinates, playerOneBoard);
+    const { followingCoordinates } = a;
+    expect(followingCoordinates).toEqual({ left: [4, 4], right: [4, 7] });
+  });
+});
+
+describe("changeAttackCoordinates;", () => {
+  test("Assign { left: [4, 4], right: [4, 8] } to followingCoordinates through updateFollowingCoordinates method", () => {
+    const { playerOneBoard } = g.state;
+    const coordinates = [4, 6];
+
+    a.changeAttackCoordinates(coordinates, playerOneBoard);
+
+    a.currentAdjacentCoordinates = {
+      tileName: "left",
+      coordinates: [4, 5],
+    };
+    a.firstHitCoordinates = [4, 6];
+
+    a.changeAttackCoordinates(coordinates, playerOneBoard);
+
+    a.followingCoordinates = { left: [4, 4], right: [4, 7] };
+    a.currentFollowingCoordinates = { right: [4, 7] };
+
+    a.changeAttackCoordinates(coordinates, playerOneBoard);
+
+    const { followingCoordinates } = a;
+    expect(followingCoordinates).toEqual({ left: [4, 4], right: [4, 8] });
+  });
+});
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
+
+// describe("", ()=>{
+//   test("", ()=>{
+//     expect()
+//   })
+// })
 
 // describe("", ()=>{
 //   test("", ()=>{

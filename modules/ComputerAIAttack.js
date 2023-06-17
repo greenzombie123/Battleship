@@ -10,8 +10,8 @@ export default class ComputerAIAttack {
     this.currentFollowingCoordinates = {};
   }
 
-  isComputerAttackTurn(currentPlayerBoard){
-    return currentPlayerBoard === "playerTwoBoard"
+  isComputerAttackTurn(currentPlayerBoard) {
+    return currentPlayerBoard === "playerTwoBoard";
   }
 
   computerMakeAttack() {}
@@ -57,7 +57,7 @@ export default class ComputerAIAttack {
     if (!this.isOffBoard(down) && !this.hasMiss(playerOneBoard, down))
       adjacentCoordinates.down = down;
 
-    return adjacentCoordinates;
+    this.adjacentCoordinates = adjacentCoordinates;
   }
 
   attackAdjacentTiles(adjacentCoordinates) {
@@ -92,7 +92,6 @@ export default class ComputerAIAttack {
   ) {
     const { tileName, coordinates } = currentAdjacentCoordinates;
     const followingCoordinates = {};
-    // console.log(currentAdjacentCoordinates, firstHitCoordinates, playerOneBoard);
     switch (tileName) {
       case "left": {
         const left = [coordinates[0], coordinates[1] - 1];
@@ -178,11 +177,11 @@ export default class ComputerAIAttack {
     this.followingCoordinates = followCoors;
   }
 
-  didShipSink(ship){
-    return ship.hasSunk
+  didShipSink(ship) {
+    return ship.hasSunk;
   }
 
-  resetCoordinates(){
+  resetCoordinates() {
     this.madeFirstHit = false;
     this.madeSecondHit = false;
     this.firstHitCoordinates = [];
@@ -190,6 +189,23 @@ export default class ComputerAIAttack {
     this.currentAdjacentCoordinates = null;
     this.previousAdjacentAttacks = [];
     this.followingCoordinates = null;
-    this.currentFollowingCoordinates = {};
+    this.currentFollowingCoordinates = null;
   }
+
+  changeAttackCoordinates = (coordinates, playerOneBoard) => {
+    if (!this.madeFirstHit) {
+      this.setMadeFirstHit();
+      this.setAdjacentCoordinates(coordinates, playerOneBoard);
+    } else if (this.madeFirstHit && !this.madeSecondHit) {
+      this.setMadeSecondHit();
+      this.setFollowingCoordinates(
+        this.currentAdjacentCoordinates,
+        this.firstHitCoordinates,
+        playerOneBoard
+      );
+    }
+    else if(this.madeFirstHit && this.madeSecondHit){
+        this.updateFollowingCoordinates(this.followingCoordinates, this.currentFollowingCoordinates)
+    }
+  };
 }
