@@ -320,20 +320,51 @@ describe("updateFollowingCoordinates", () => {
   });
 });
 
-describe("didShipSink", ()=>{
-  test("Return true if the ship's isSunk prop true", ()=>{
-    const ship = new Ship("Submarine", 2)
-    ship.hasSunk = true
-    const hasSunk = a.didShipSink(ship)
-    expect(hasSunk).toBe(true)
-  })
-})
+describe("didShipSink", () => {
+  test("Return true if the ship's isSunk prop true", () => {
+    const ship = new Ship("Submarine", 2);
+    ship.hasSunk = true;
+    const hasSunk = a.didShipSink(ship);
+    expect(hasSunk).toBe(true);
+  });
+});
 
-// describe("", ()=>{
-//   test("", ()=>{
-//     expect()
-//   })
-// })
+describe("resetCoordinates", () => {
+  test("Revert all props of ComputerAIAttack to their default values", () => {
+    a.madeFirstHit = true;
+    a.madeSecondHit = true;
+    a.firstHitCoordinates = [1, 2];
+    a.adjacentCoordinates = {
+      left: [1, 0],
+      right: [1, 2],
+      up: [0, 1],
+      down: [2, 1],
+    };
+    a.currentAdjacentCoordinates = {
+      left: [1, 0],
+    };
+    a.previousAdjacentAttacks = {
+      left: [1, 0],
+      right: [1, 2],
+      up: [0, 1],
+      down: [2, 1],
+    };
+    a.followingCoordinates = 12312;
+    a.currentFollowingCoordinates = "dfdfdsfdfs";
+    const expected = {
+      madeFirstHit: false,
+      madeSecondHit: false,
+      firstHitCoordinates: [],
+      adjacentCoordinates: null,
+      currentAdjacentCoordinates: null,
+      previousAdjacentAttacks: [],
+      followingCoordinates: null,
+      currentFollowingCoordinates: {},
+    };
+    a.resetCoordinates();
+    expect(a).toEqual(expected);
+  });
+});
 
 // describe("", ()=>{
 //   test("", ()=>{

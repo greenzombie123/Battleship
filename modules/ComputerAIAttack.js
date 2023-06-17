@@ -177,4 +177,15 @@ export default class ComputerAIAttack {
   didShipSink(ship){
     return ship.hasSunk
   }
+
+  resetCoordinates(){
+    this.madeFirstHit = false;
+    this.madeSecondHit = false;
+    this.firstHitCoordinates = [];
+    this.adjacentCoordinates = null;
+    this.currentAdjacentCoordinates = null;
+    this.previousAdjacentAttacks = [];
+    this.followingCoordinates = null;
+    this.currentFollowingCoordinates = {};
+  }
 }
