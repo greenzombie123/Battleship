@@ -10,6 +10,10 @@ export default class ComputerAIAttack {
     this.currentFollowingCoordinates = {};
   }
 
+  isComputerAttackTurn(currentPlayerBoard){
+    return currentPlayerBoard === "playerTwoBoard"
+  }
+
   computerMakeAttack() {}
 
   attackRandomTile(playerOneBoard) {

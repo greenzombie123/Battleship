@@ -366,11 +366,13 @@ describe("resetCoordinates", () => {
   });
 });
 
-// describe("", ()=>{
-//   test("", ()=>{
-//     expect()
-//   })
-// })
+describe("isComputerAttackTurn", ()=>{
+  test("Return true if currentPlayerBoard is playerTwoBoard", ()=>{
+    const currentPlayerBoard = "playerTwoBoard"
+    const isComputerTurn = a.isComputerAttackTurn(currentPlayerBoard)
+    expect(isComputerTurn).toBe(true)
+  })
+})
 
 // describe("", ()=>{
 //   test("", ()=>{
