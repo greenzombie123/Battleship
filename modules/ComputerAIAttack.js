@@ -151,11 +151,26 @@ export default class ComputerAIAttack {
     const tilesNames = Object.keys(followingCoordinates);
     const chosenTileName = tilesNames[randomNum];
     return {
-      [chosenTileName]: followingCoordinates[chosenTileName], 
+      [chosenTileName]: followingCoordinates[chosenTileName],
     };
   }
 
   setCurrentFollowingCoordinates(currentFollowingCoordinate) {
-    this.currentFollowingCoordinates = currentFollowingCoordinate
+    this.currentFollowingCoordinates = currentFollowingCoordinate;
+  }
+
+  updateFollowingCoordinates(
+    followingCoordinates,
+    currentFollowingCoordinates
+  ) {
+    const followCoors = followingCoordinates;
+    const tileName = Object.keys(currentFollowingCoordinates)[0];
+    const [y, x] = currentFollowingCoordinates[tileName];
+
+    if (tileName === "left") followCoors.left = [y, x - 1];
+    else if (tileName === "right") followCoors.right = [y, x + 1];
+    else if (tileName === "up") followCoors.up = [y - 1, x];
+    else if (tileName === "down") followCoors.down = [y + 1, x];
+    this.followingCoordinates = followCoors;
   }
 }

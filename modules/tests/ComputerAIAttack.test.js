@@ -296,11 +296,29 @@ describe("setCurrentFollowingCoordinates", () => {
   });
 });
 
-// describe("", ()=>{
-//   test("", ()=>{
-//     expect()
-//   })
-// })
+describe("updateFollowingCoordinates", () => {
+  test("Change the object {left:[2,2], right:[2,5]} to {left:[2,2], right:[2,6]} and set to followingCoordinates prop", () => {
+    const oldFollowingCoordinates = { left: [2, 2], right: [2, 5] };
+    const currentFollowingCoordinates = { right: [2, 5] };
+    a.updateFollowingCoordinates(
+      oldFollowingCoordinates,
+      currentFollowingCoordinates
+    );
+    const { followingCoordinates } = a;
+    expect(followingCoordinates).toEqual({ left: [2, 2], right: [2, 6] });
+  });
+
+  test("Change the object {up:[0,2], down:[3,2]} to {up:[0,2], down:[4,2]} and set to followingCoordinates prop", () => {
+    const oldFollowingCoordinates = { up: [0, 2], down: [3, 2] };
+    const currentFollowingCoordinates = { down: [3, 2] };
+    a.updateFollowingCoordinates(
+      oldFollowingCoordinates,
+      currentFollowingCoordinates
+    );
+    const { followingCoordinates } = a;
+    expect(followingCoordinates).toEqual({ up: [0, 2], down: [4, 2] });
+  });
+});
 
 // describe("", ()=>{
 //   test("", ()=>{
