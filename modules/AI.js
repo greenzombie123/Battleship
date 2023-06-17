@@ -10,7 +10,7 @@ export default class ComputerAI extends ComputerAIAttack{
   }
 
   computerPlaceShip(state, game) {
-    //TODO Check if opponent is the computer
+    // TODO Check if opponent is the computer
     for (let index = 0; index < 5; index++) {
       const ship = this.generateValidCoordinates(state);
         this.changeDirection(ship.direction, game);

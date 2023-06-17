@@ -37,7 +37,6 @@ computerMakeAttack(){
 setFirstHitCoordinates(coordinates){}
 setCurrentFollowingCoordinates(currentFollowingCoordinates){}
 
-
 changeAttackPhase(ship, coordinates){
     if(!this.madeFirstHit){
         this.setMadeFirstHit();

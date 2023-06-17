@@ -70,10 +70,79 @@ export default class ComputerAIAttack {
     this.currentAdjacentCoordinates = singleAdjacentCoordinate;
   }
 
-  setPreviousAdjacentAttacks ({tileName}) {
+  setPreviousAdjacentAttacks({ tileName }) {
     const hasTileName = this.previousAdjacentAttacks.some(
       (name) => tileName === name
     );
     if (!hasTileName) this.previousAdjacentAttacks.push(tileName);
+  }
+
+  setMadeSecondHit() {
+    this.madeSecondHit = true;
+  }
+
+  setFollowingCoordinates(
+    currentAdjacentCoordinates,
+    firstHitCoordinates,
+    playerOneBoard
+  ) {
+    const { tileName, coordinates } = currentAdjacentCoordinates;
+    const followingCoordinates = {};
+    // console.log(currentAdjacentCoordinates, firstHitCoordinates, playerOneBoard);
+    switch (tileName) {
+      case "left": {
+        const left = [coordinates[0], coordinates[1] - 1];
+        const right = [firstHitCoordinates[0], firstHitCoordinates[1] + 1];
+        const isLeftValid =
+          !this.isOffBoard(left) && !this.hasMiss(playerOneBoard, left);
+        const isRightValid =
+          !this.isOffBoard(right) && !this.hasMiss(playerOneBoard, right);
+        if (isLeftValid) followingCoordinates.left = left;
+        if (isRightValid) followingCoordinates.right = right;
+        this.followingCoordinates = followingCoordinates;
+        break;
+      }
+      case "right": {
+        const right = [coordinates[0], coordinates[1] + 1];
+        const left = [firstHitCoordinates[0], firstHitCoordinates[1] - 1];
+        const isRightValid =
+          !this.isOffBoard(right) && !this.hasMiss(playerOneBoard, right);
+        const isLeftValid =
+          !this.isOffBoard(left) && !this.hasMiss(playerOneBoard, left);
+        if (isLeftValid) followingCoordinates.left = left;
+        if (isRightValid) followingCoordinates.right = right;
+        this.followingCoordinates = followingCoordinates;
+        break;
+      }
+
+      case "up": {
+        const up = [coordinates[0] - 1, coordinates[1]];
+        const down = [firstHitCoordinates[0] + 1, firstHitCoordinates[1]];
+        const isUpValid =
+          !this.isOffBoard(up) && !this.hasMiss(playerOneBoard, up);
+        const isDownValid =
+          !this.isOffBoard(down) && !this.hasMiss(playerOneBoard, down);
+        if (isDownValid) followingCoordinates.down = down;
+        if (isUpValid) followingCoordinates.up = up;
+        this.followingCoordinates = followingCoordinates;
+        break;
+      }
+
+      case "down": {
+        const down = [coordinates[0] + 1, coordinates[1]];
+        const up = [firstHitCoordinates[0] - 1, firstHitCoordinates[1]];
+        const isUpValid =
+          !this.isOffBoard(up) && !this.hasMiss(playerOneBoard, up);
+        const isDownValid =
+          !this.isOffBoard(down) && !this.hasMiss(playerOneBoard, down);
+        if (isDownValid) followingCoordinates.down = down;
+        if (isUpValid) followingCoordinates.up = up;
+        this.followingCoordinates = followingCoordinates;
+        break;
+      }
+
+      default:
+        break;
+    }
   }
 }

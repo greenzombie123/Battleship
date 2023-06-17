@@ -10,7 +10,8 @@
     "sourceType": "module"
   },
   "rules": {
-    "class-methods-use-this": "off",
-    "allowForLoopAfterthoughts": "true"
+    "class-methods-use-this": "off"
   }
 }
+
+//"allowForLoopAfterthoughts": "on"

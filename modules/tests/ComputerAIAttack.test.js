@@ -191,23 +191,60 @@ describe("setPreviousAdjacentAttacks", () => {
   });
 });
 
-// describe("", ()=>{
-//   test("", ()=>{
-//     expect()
-//   })
-// })
+describe("setMadeSecondHit", ()=>{
+  test("Assign true to madeSecondHit prop", ()=>{
+    a.setMadeSecondHit()
+    expect(a.madeSecondHit).toBe(true)
+  })
+})
 
-// describe("", ()=>{
-//   test("", ()=>{
-//     expect()
-//   })
-// })
+describe("", ()=>{
+  test("", ()=>{
+    expect()
+  })
+})
 
-// describe("", ()=>{
-//   test("", ()=>{
-//     expect()
-//   })
-// })
+describe("setFollowingCoordinates", ()=>{
+  test("Return an object {left:[4,4], right:[4,7]}", ()=>{
+    const currentAdjacentCoordinates = {tileName:"left", coordinates:[4,5]}
+    a.firstHitCoordinates = [4,6]
+    a.setFollowingCoordinates(currentAdjacentCoordinates, a.firstHitCoordinates, g.state.playerOneBoard)
+    const {followingCoordinates} = a 
+    expect(followingCoordinates).toEqual({left:[4,4], right:[4,7]})
+  })
+
+  test("Return an object {left:[4,7]}", ()=>{
+    const currentAdjacentCoordinates = {tileName:"left", coordinates:[4,8]}
+    a.firstHitCoordinates = [4,9]
+    a.setFollowingCoordinates(currentAdjacentCoordinates, a.firstHitCoordinates, g.state.playerOneBoard)
+    const {followingCoordinates} = a 
+    expect(followingCoordinates).toEqual({left:[4,7]})
+  })
+
+  test("Return an object {right:[4,7], left:[4,4]}", ()=>{
+    const currentAdjacentCoordinates = {tileName:"right", coordinates:[4,6]}
+    a.firstHitCoordinates = [4,5]
+    a.setFollowingCoordinates(currentAdjacentCoordinates, a.firstHitCoordinates, g.state.playerOneBoard)
+    const {followingCoordinates} = a 
+    expect(followingCoordinates).toEqual({right:[4,7], left:[4,4]})
+  })
+
+  test("Return an object {up:[3,5], down:[6,5]}", ()=>{
+    const currentAdjacentCoordinates = {tileName:"up", coordinates:[4,5]}
+    a.firstHitCoordinates = [5,5]
+    a.setFollowingCoordinates(currentAdjacentCoordinates, a.firstHitCoordinates, g.state.playerOneBoard)
+    const {followingCoordinates} = a 
+    expect(followingCoordinates).toEqual({up:[3,5], down:[6,5]})
+  })
+
+  test("Return an object {up:[5,8], down:[8,8]}", ()=>{
+    const currentAdjacentCoordinates = {tileName:"down", coordinates:[7,8]}
+    a.firstHitCoordinates = [6,8]
+    a.setFollowingCoordinates(currentAdjacentCoordinates, a.firstHitCoordinates, g.state.playerOneBoard)
+    const {followingCoordinates} = a 
+    expect(followingCoordinates).toEqual({up:[5,8], down:[8,8]})
+  })
+})
 
 // describe("", ()=>{
 //   test("", ()=>{
