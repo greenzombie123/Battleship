@@ -155,5 +155,7 @@ export default class ComputerAIAttack {
     };
   }
 
-  setCurrentFollowingCoordinates(currentFollowingCoordinate) {}
+  setCurrentFollowingCoordinates(currentFollowingCoordinate) {
+    this.currentFollowingCoordinates = currentFollowingCoordinate
+  }
 }
