@@ -246,11 +246,14 @@ describe("setFollowingCoordinates", ()=>{
   })
 })
 
-// describe("", ()=>{
-//   test("", ()=>{
-//     expect()
-//   })
-// })
+describe("attackFollowingTiles", ()=>{
+  test("Return a object {left:[6,6]}", ()=>{
+    jest.spyOn(global.Math, "random").mockReturnValue(0.1);
+    const followingCoordinates = {left:[4,4], right:[4,7]}
+    const expected = a.attackFollowingTiles(followingCoordinates)
+    expect(expected).toEqual({left:[4,4]})
+  })
+})
 
 // describe("", ()=>{
 //   test("", ()=>{

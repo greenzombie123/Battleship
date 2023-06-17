@@ -145,4 +145,15 @@ export default class ComputerAIAttack {
         break;
     }
   }
+
+  attackFollowingTiles(followingCoordinates) {
+    const randomNum = Math.floor(Math.random() * 2);
+    const tilesNames = Object.keys(followingCoordinates);
+    const chosenTileName = tilesNames[randomNum];
+    return {
+      [chosenTileName]: followingCoordinates[chosenTileName], 
+    };
+  }
+
+  setCurrentFollowingCoordinates(currentFollowingCoordinate) {}
 }
