@@ -1,25 +1,8 @@
-function isPalidrome(string) {
-  string = string.replace(/[^a-zA-Z]/g, "");
-  if (string.length === 1) return true;
-  const firstLetter = string[0];
-  const lastLetter = string[string.length - 1];
-  if (firstLetter === lastLetter) {
-    const newString = string.substring(1, string.length - 1);
-    const answer = isPalidrome(newString);
-    return answer;
-  } else return false;
+export default function () {
+  return 12;
 }
 
-const answer = isPalidrome("racecar");
-
-answer;
-
-// const string = 'abaa'
-
-// const g = string.length
-
-// g
-
-// const newString = string.substring(1, 3);
-
-// newString
+export function give13() {
+  return 13;
+}
+// console.log(doStuff());

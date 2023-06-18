@@ -11,7 +11,7 @@ currentFollowingCoordinates = {}
 
 isComputerAttackTurn({currentPlayerBoard}){}
 
-computerMakeAttack(){
+computerMakeAttack(game){
     let coordinates; 
 
     if(madeFirstHit){ 
@@ -31,7 +31,7 @@ computerMakeAttack(){
         coordinates = this.attackRandomTile()
         this.setFirstHitCoordinates(coordinates)
     }
-    this.game.makeAttack(coordinates)
+    game.makeAttack(coordinates)
 }
 
 setFirstHitCoordinates(coordinates){}

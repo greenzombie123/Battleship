@@ -14,7 +14,33 @@ export default class ComputerAIAttack {
     return currentPlayerBoard === "playerTwoBoard";
   }
 
-  computerMakeAttack() {}
+  computerMakeAttack(game) {
+    const { playerOneBoard } = game;
+    let coordinates;
+
+    if (this.madeFirstHit) {
+      if (this.madeFirstHit && this.madeSecondHit) {
+        const currentFollowingCoordinates = this.attackFollowingTiles(this.followingCoordinates);
+        this.setCurrentFollowingCoordinates(currentFollowingCoordinates);
+        const tileName = Object.keys(currentFollowingCoordinates)[0];
+        coordinates = currentFollowingCoordinates[tileName];
+      } else {
+        const currentAdjacentCoordinates = this.attackAdjacentTiles(
+          this.adjacentCoordinates
+        );
+        this.setCurrentAdjacentCoordinates(currentAdjacentCoordinates);
+        this.setPreviousAdjacentAttacks(currentAdjacentCoordinates);
+        coordinates = currentAdjacentCoordinates.coordinates;
+      }
+    }
+
+    if (!this.madeFirstHit) {
+      coordinates = this.attackRandomTile(playerOneBoard);
+      this.setFirstHitCoordinates(coordinates);
+    }
+
+    game.makeAttack(coordinates);
+  }
 
   attackRandomTile(playerOneBoard) {
     const coordinates = [];
@@ -203,9 +229,11 @@ export default class ComputerAIAttack {
         this.firstHitCoordinates,
         playerOneBoard
       );
-    }
-    else if(this.madeFirstHit && this.madeSecondHit){
-        this.updateFollowingCoordinates(this.followingCoordinates, this.currentFollowingCoordinates)
+    } else if (this.madeFirstHit && this.madeSecondHit) {
+      this.updateFollowingCoordinates(
+        this.followingCoordinates,
+        this.currentFollowingCoordinates
+      );
     }
   };
 }
