@@ -2,10 +2,12 @@
 ![odin-project-battleship](https://github.com/greenzombie123/Battleship/assets/105436283/797a12d8-d6f0-4821-b350-49d7c0b3f737)
 
 # Goal
-The goal of this project is to create program that using asyncronous programming and an API. This app was made for the purpose of the Odin Project but instead of making a weather app, I wanted to make use of dictionary-like api, thus why I made a hangman game that pulls random words from an api called Random Word API created from API Ninjas (https://api-ninjas.com/).
+The goal of this project was to create a rendition of the classic Battleship boardgame through the use of Test Driven Development. The game was to be made not only by typical tech needed to make this game but also with the assistance of Jest, a Javascript Testing Framework, to ensure that code is constantly tested before being used. 
 
 # Features
-Get a random word using an API Guess the word using either the input or letter buttons Renders a stick figure body
+- Battleship fun!
+- Play with another human or the AI. 
+- AI can place ships on the board as well as attack intelligently.
 
 # Tools and Technologies
 Visual Studio Code
@@ -13,19 +15,14 @@ HTML
 Javascript
 CSS
 Github and Git
-Web Pack
 ES Lint
 Linux Command Line
 Chrome Dev Tools
-Random Word API
-Web Animation API
-Canvas API
+Jest
+ChatGPT
 
 # Things I've Learned and Noticed
-Learned how to make asycronous code using promises, await and async.
-Learned how to use an API from another server.
-Learned how to use the Web Animation and Canvas API
-Need to document my code.
-Need to commit more often and madk better comments on my commits.
-I have the tendency to rush into writing code right away and also not taking my time to read documentation slowly. Basically, need to slow down.
-This app will sometimes not work due to CORS policy. Need to learn more about this (and take my time to read the documents about it) and update this later.
+Writing tests improves code quality and proper planning 
+Learned how to use Jest
+Tend to get impatient and make patchy fixes when I am almost finished with a project.
+Finally used extend to create a subclass for the first time for the purpose of avoiding bloating an already densely packed class.
