@@ -169,19 +169,34 @@ describe("setCurrentAdjacentCoordinates", () => {
 });
 
 describe("setPreviousAdjacentAttacks", () => {
-  test("Insert 'left' into the previousAdjacentAttacks prop array", () => {
+  test("Remove 'left' from adjacentAttacks prop object", () => {
+    a.adjacentCoordinates = {
+      left: [7, 7],
+      right: [7, 9],
+      up: [6, 8],
+      down: [8, 8],
+    };
     const singleAdjacentCoordinates = { tileName: "left", coordinates: [7, 7] };
-    a.setPreviousAdjacentAttacks(singleAdjacentCoordinates);
-    const { previousAdjacentAttacks } = a;
-    expect(previousAdjacentAttacks).toContain("left");
+    a.removeAdjacentCoordinates(singleAdjacentCoordinates);
+    const { adjacentCoordinates } = a;
+    expect(adjacentCoordinates).toEqual({
+      right: [7, 9],
+      up: [6, 8],
+      down: [8, 8],
+    });
   });
 
-  test("Don't insert 'up' into the previousAdjacentAttacks prop array because its already there", () => {
-    const singleAdjacentCoordinates = { tileName: "up", coordinates: [7, 7] };
-    a.previousAdjacentAttacks = ["right", "up"];
-    a.setPreviousAdjacentAttacks(singleAdjacentCoordinates);
-    const { previousAdjacentAttacks } = a;
-    expect(previousAdjacentAttacks).toEqual(["right", "up"]);
+  test("Remove 'down' from adjacentAttacks prop object", () => {
+    a.adjacentCoordinates = {
+      up: [6, 8],
+      down: [8, 8],
+    };
+    const singleAdjacentCoordinates = { tileName: "down", coordinates: [8, 8] };
+    a.removeAdjacentCoordinates(singleAdjacentCoordinates);
+    const { adjacentCoordinates } = a;
+    expect(adjacentCoordinates).toEqual({
+      up: [6, 8],
+    });
   });
 });
 
@@ -288,9 +303,11 @@ describe("updateFollowingCoordinates", () => {
   test("Change the object {left:[2,2], right:[2,5]} to {left:[2,2], right:[2,6]} and set to followingCoordinates prop", () => {
     const oldFollowingCoordinates = { left: [2, 2], right: [2, 5] };
     const currentFollowingCoordinates = { right: [2, 5] };
+    const { playerOneBoard } = g.state;
     a.updateFollowingCoordinates(
       oldFollowingCoordinates,
-      currentFollowingCoordinates
+      currentFollowingCoordinates,
+      playerOneBoard
     );
     const { followingCoordinates } = a;
     expect(followingCoordinates).toEqual({ left: [2, 2], right: [2, 6] });
@@ -299,9 +316,11 @@ describe("updateFollowingCoordinates", () => {
   test("Change the object {up:[0,2], down:[3,2]} to {up:[0,2], down:[4,2]} and set to followingCoordinates prop", () => {
     const oldFollowingCoordinates = { up: [0, 2], down: [3, 2] };
     const currentFollowingCoordinates = { down: [3, 2] };
+    const { playerOneBoard } = g.state;
     a.updateFollowingCoordinates(
       oldFollowingCoordinates,
-      currentFollowingCoordinates
+      currentFollowingCoordinates,
+      playerOneBoard
     );
     const { followingCoordinates } = a;
     expect(followingCoordinates).toEqual({ up: [0, 2], down: [4, 2] });
@@ -368,8 +387,8 @@ describe("resetCoordinates", () => {
 });
 
 describe("isComputerAttackTurn", () => {
-  test("Return true if currentPlayerBoard is playerTwoBoard", () => {
-    const currentPlayerBoard = "playerTwoBoard";
+  test("Return true if currentPlayerBoard is playerOneBoard", () => {
+    const currentPlayerBoard = "playerOneBoard";
     const isComputerTurn = a.isComputerAttackTurn(currentPlayerBoard);
     expect(isComputerTurn).toBe(true);
   });
@@ -428,48 +447,36 @@ describe("changeAttackCoordinates", () => {
   });
 });
 
-describe("changeAttackCoordinates;", () => {
-  test("Assign { left: [4, 4], right: [4, 8] } to followingCoordinates through updateFollowingCoordinates method", () => {
-    const { playerOneBoard } = g.state;
-    const coordinates = [4, 6];
-
-    a.changeAttackCoordinates(coordinates, playerOneBoard);
-
-    a.currentAdjacentCoordinates = {
-      tileName: "left",
-      coordinates: [4, 5],
-    };
-    a.firstHitCoordinates = [4, 6];
-
-    a.changeAttackCoordinates(coordinates, playerOneBoard);
-
-    a.followingCoordinates = { left: [4, 4], right: [4, 7] };
-    a.currentFollowingCoordinates = { right: [4, 7] };
-
-    a.changeAttackCoordinates(coordinates, playerOneBoard);
-
-    const { followingCoordinates } = a;
-    expect(followingCoordinates).toEqual({ left: [4, 4], right: [4, 8] });
+describe("hasHit", () => {
+  test("Return true if the shipPart's wasHit prop", () => {
+    const shipPart = new ShipPart({ name: "stuff" });
+    shipPart.wasHit = true;
+    const coordinates = [0, 0];
+    g.state.playerOneBoard[0][0] = shipPart;
+    expect(a.hasHit(g.state.playerOneBoard, coordinates)).toBe(true);
   });
 });
 
-// describe("", ()=>{
-//   test("", ()=>{
-//     expect()
-//   })
-// })
+describe("isFollowingCoordinatesEmpty", () => {
+  test("REturn true if followingCoordinates has no properties", () => {
+    a.followingCoordinates = {};
+    const isEmpty = a.isFollowingCoordinatesEmpty();
+    expect(isEmpty).toBe(true);
+  });
+});
 
-// describe("", ()=>{
-//   test("", ()=>{
-//     expect()
-//   })
-// })
-
-// describe("", ()=>{
-//   test("", ()=>{
-//     expect()
-//   })
-// })
+describe("removeCurrentFollowingCoordinates", () => {
+  test("Remove {left:[1,1]} from followingCoordinates", () => {
+    a.followingCoordinates = { left: [1, 1], right: [1, 5] };
+    a.currentFollowingCoordinates = { left: [1, 1] };
+    const { followingCoordinates, currentFollowingCoordinates } = a;
+    a.removeCurrentFollowingCoordinates(
+      followingCoordinates,
+      currentFollowingCoordinates
+    );
+    expect(a.followingCoordinates).toEqual({ right: [1, 5] });
+  });
+});
 
 // describe("", ()=>{
 //   test("", ()=>{

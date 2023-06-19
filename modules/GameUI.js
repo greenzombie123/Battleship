@@ -10,7 +10,7 @@ import makeGameBoard from "./GameBoard.js";
 
 export default class GameUI {
   constructor() {
-    this.ai = new ComputerAI()
+    this.ai = new ComputerAI();
     this.eventEmitter = new EventEmitter();
     this.game = new Game(this.eventEmitter, this.ai);
     this.selectionUI = new SelectionUI(this.game);
@@ -19,13 +19,12 @@ export default class GameUI {
   }
 
   initiate() {
-
     this.eventEmitter.on("startShipPlacement", (state) => {
       this.shipPlacementUI.initiate(state);
     });
 
     this.eventEmitter.on("changeDirection", (currentDirection, direction) => {
-      console.log(currentDirection, direction);
+      // console.log(currentDirection, direction);
       this.shipPlacementUI.setCurrentDirection(currentDirection, direction);
     });
 
@@ -40,20 +39,46 @@ export default class GameUI {
       this.shipPlacementUI.render();
     });
 
-    this.eventEmitter.on('startGame', (state)=>{
-      this.gamePlayUI.initiate(state)
-    })
+    this.eventEmitter.on("startGame", (state) => {
+      this.gamePlayUI.initiate(state);
+    });
 
     this.eventEmitter.on("attackMade", (board) => {
       this.gamePlayUI.setGameState(board);
       this.gamePlayUI.render();
     });
 
-    this.eventEmitter.on("gameOver", (string)=>{
-      this.gamePlayUI.renderWinner(string)
-    })
+    this.eventEmitter.on("gameOver", (string) => {
+      this.gamePlayUI.renderWinner(string);
+    });
 
-    this.selectionUI.render()
+    this.eventEmitter.on(
+      "hitConfirmed",
+      (coordinates, playerOneBoard, ship) => {
+        this.ai.changeAttackCoordinates(coordinates, playerOneBoard);
+        if (this.ai.madeFirstHit && this.ai.madeSecondHit)
+          if (Object.keys(this.ai.followingCoordinates).length === 0)
+            this.ai.resetCoordinates();
+        else{
+          const hadSunk = this.ai.didShipSink(ship);
+          if (hadSunk) this.ai.resetCoordinates();
+        }
+      }
+    );
+
+    this.eventEmitter.on("followingHitMissed", (playerOneBoard) => {
+      console.log(this.ai.followingCoordinates, 9);
+      this.ai.removeCurrentFollowingCoordinates(
+        this.ai.followingCoordinates,
+        this.ai.currentFollowingCoordinates
+      );
+      if (this.ai.isFollowingCoordinatesEmpty()) {
+        this.ai.resetCoordinates();
+      }
+      console.log(this.ai.followingCoordinates, 1);
+    });
+
+    this.selectionUI.render();
 
     //! ShipPlacement Testing
     // this.game.state.playerOneBoard = p1b

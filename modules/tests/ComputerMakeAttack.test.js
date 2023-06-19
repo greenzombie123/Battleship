@@ -4,7 +4,6 @@ import EventEmitter from "../EventEmitter.js";
 import Ship from "../Ship.js";
 import ShipPart from "../ShipPart.js";
 
-const mockMakeAttack = jest.fn();
 jest.mock("../Game.js");
 
 let g;
@@ -14,6 +13,7 @@ beforeEach(() => {
   Game.mockClear();
   const e = new EventEmitter();
   g = new Game(e);
+  g.state = {playerOneBoard:[]}
   a = new ComputerAI();
 });
 
@@ -40,6 +40,7 @@ test("Pass an object of '{tileName: left,coordinates: [1, 0]}' to game.makeAttac
     coordinates: [1, 0],
   });
   a.attackAdjacentTiles = mockedAttackAdjacentTiles;
+  a.removeAdjacentCoordinates = jest.fn()
   a.computerMakeAttack(g);
   expect(a.attackAdjacentTiles).toHaveBeenCalledTimes(1);
   expect(g.makeAttack).toHaveBeenCalledTimes(1);
@@ -52,6 +53,7 @@ test("Pass an { left: [4, 4] } from attackFollowingTiles to game.makeAttack", ()
   const mockedAttackFollowingTiles = jest.fn();
   mockedAttackFollowingTiles.mockReturnValue({ left: [4, 4] });
   a.attackFollowingTiles = mockedAttackFollowingTiles;
+  a.updateFollowingCoordinates = jest.fn()
   a.computerMakeAttack(g);
   expect(a.attackFollowingTiles).toHaveBeenCalledTimes(1);
   expect(g.makeAttack).toHaveBeenCalledTimes(1);

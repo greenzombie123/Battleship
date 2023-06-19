@@ -1,4 +1,5 @@
 import Game, { init } from "../Game";
+import ComputerAI from "../AI";
 import ShipPart from "../ShipPart";
 import Ship from "../Ship";
 import EventEmitter from "../EventEmitter";
@@ -491,7 +492,7 @@ describe("setGameStatus", () => {
     game.state.playerTwoShips = [1];
     game.state.playerOneShips = [];
     game.setGameStatus(game.state);
-    expect(game.state.gameStatus).toBe("Player One is Winner");
+    expect(game.state.gameStatus).toBe("Player Two is Winner");
   });
 
   test("Set gameStatus state prop to 'Player Two is Winner' if playerOneShip array is empty", () => {
@@ -499,7 +500,7 @@ describe("setGameStatus", () => {
     game.state.playerTwoShips = [];
     game.state.playerOneShips = [1];
     game.setGameStatus(game.state);
-    expect(game.state.gameStatus).toBe("Player Two is Winner");
+    expect(game.state.gameStatus).toBe("Player One is Winner");
   });
 });
 
@@ -521,7 +522,7 @@ describe("validateAttack", () => {
 
 describe("makeAttack", () => {
   test("Miss a target on the board", () => {
-    const game = new Game(new EventEmitter());
+    const game = new Game(new EventEmitter(), new ComputerAI());
     game.state.stage = "play";
     game.makeAttack([1, 1]);
     const { playerOneBoard } = game.state;

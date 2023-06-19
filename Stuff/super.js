@@ -1,8 +1,6 @@
-const g = {a:12, b:[1,2,3]}
-const j = {a:true, b:[]}
+const g = {a:1,b:4}
 
-const b = {a:g.a}
+delete g.a
+delete g.b
 
-b
-
-console.log(g["a"]);
+g

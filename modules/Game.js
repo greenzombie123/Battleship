@@ -30,8 +30,6 @@ export default class Game {
     this.state = { ...this.state, ...newState };
   }
 
-  // User can call this during `selection` to choose their opponent
-  // After that, move to 'placement' stage by calling `startPlacement`
   chooseOpponent(opponent) {
     if (this.state.stage !== "selection") return;
     this.setOpponent(opponent);
@@ -123,9 +121,11 @@ export default class Game {
         this.eventEmitter.emit("startGame", this.state);
       }
     }
-    // console.log(this.state, this);
-    //! Computer AI
-    if (this.ai.canComputerPlaceShip(this.state.placeableShips) && this.state.opponent === "computer")
+
+    if (
+      this.ai.canComputerPlaceShip(this.state.placeableShips) &&
+      this.state.opponent === "computer"
+    )
       this.ai.computerPlaceShip(this.state, this);
   }
 
@@ -182,7 +182,6 @@ export default class Game {
     this.setState({ playerTwoShips });
   }
 
-  // Get last item from placeableShips array
   getCurrentShip(placeableShips) {
     return placeableShips[placeableShips.length - 1];
   }
@@ -345,9 +344,9 @@ export default class Game {
   setGameStatus(state) {
     const { playerOneShips, playerTwoShips } = state;
     if (playerOneShips.length === 0)
-      this.setState({ gameStatus: "Player One is Winner" });
-    if (playerTwoShips.length === 0)
       this.setState({ gameStatus: "Player Two is Winner" });
+    if (playerTwoShips.length === 0)
+      this.setState({ gameStatus: "Player One is Winner" });
     this.eventEmitter.emit("gameOver", this.state.gameStatus);
   }
 
@@ -371,25 +370,44 @@ export default class Game {
     const isMiss = this.wasMiss(state, coordinates);
     if (isMiss) {
       this.missTarget(state, coordinates);
+
+      if (
+        this.ai.isComputerAttackTurn(this.state.currentPlayerBoard) &&
+        this.state.opponent === "computer" && this.ai.followingCoordinates 
+      ) {
+        this.eventEmitter.emit("followingHitMissed", this.state.playerOneBoard);
+      }
+
       this.switchPlayerBoard(state);
-      // console.log(state);
       this.eventEmitter.emit("attackMade", {
         playerOneBoard: this.state.playerOneBoard,
         playerTwoBoard: this.state.playerTwoBoard,
         currentBoard: this.state.currentPlayerBoard,
       });
+
+      if (
+        this.ai.isComputerAttackTurn(this.state.currentPlayerBoard) &&
+        this.state.opponent === "computer"
+      ) {
+        this.ai.computerMakeAttack(this);
+      }
       return;
     }
     const wasHit = this.confirmWasHit(shipPart);
     if (wasHit) return;
     shipPart.hit();
 
-    //TODO event hitComfirmed
-    /*
-    if(isComputerAttackTurn(arg)){
-      this.game.eventEmitter.emit("hitConfirmed", this.state)
+    if (
+      this.ai.isComputerAttackTurn(this.state.currentPlayerBoard) &&
+      this.state.opponent === "computer"
+    ) {
+      this.eventEmitter.emit(
+        "hitConfirmed",
+        coordinates,
+        this.state.playerOneBoard,
+        shipPart.ship
+      );
     }
-    */
 
     this.removeSunkShips(state);
     this.switchPlayerBoard(state);
@@ -401,15 +419,14 @@ export default class Game {
     });
 
     const isWinner = this.checkWinner(this.state);
-    console.log(isWinner);
     if (isWinner) this.setWinner();
 
-    //TODO AI attacks if it is its turn
-    /*
-    if(isComputerAttackTurn(arg)){
-      this.game.ai.computerMakeAttack()
+    if (
+      this.ai.isComputerAttackTurn(this.state.currentPlayerBoard) &&
+      this.state.opponent === "computer"
+    ) {
+      this.ai.computerMakeAttack(this);
     }
-    */
   }
 
   resetGame() {

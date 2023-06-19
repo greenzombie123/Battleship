@@ -19,8 +19,7 @@ export default class GamePlayUI {
     const tiles = this.getAllTiles();
     this.registerMouseClickEventListeners(tiles);
     this.renderPlayerOneShips(this.playerOneBoard);
-    //! Testing
-    this.renderPlayerTwoShips(this.playerTwoBoard)
+    // this.renderPlayerTwoShips(this.playerTwoBoard)
 
     this.render();
   }
@@ -42,7 +41,6 @@ export default class GamePlayUI {
         const isCurrentBoard = this.validateCurrentPlayerBoard(
           event.currentTarget
         );
-        // console.log(isCurrentBoard);
         if (isCurrentBoard) {
           const coordinates = this.getCoordinates(event.currentTarget);
           this.makeAttack(coordinates);
@@ -156,10 +154,7 @@ export default class GamePlayUI {
     return document.querySelectorAll(".tile");
   }
 
-  //   setPlayerTiles() {
-  //     this.playerOneTiles = document.querySelectorAll(".leftSide .tile");
-  //     this.playerTwoTiles = document.querySelectorAll(".rightSide .tile");
-  //   }
+  
 
   renderGameOver() {}
 
@@ -174,17 +169,13 @@ export default class GamePlayUI {
     }
   }
 
-  /*
-    renderGame event
-    */
+  
   makeAttack(coordinates) {
     this.game.makeAttack(coordinates);
-    // console.log(coordinates);
   }
 
   getCoordinates(tile) {
     const coordinate = tile.dataset.number;
-    // Change string to number
     return [+coordinate[0], +coordinate[1]];
   }
 

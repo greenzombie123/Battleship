@@ -1,3 +1,5 @@
+import ShipPart from "./ShipPart.js";
+
 export default class ComputerAIAttack {
   constructor() {
     this.madeFirstHit = false;
@@ -11,17 +13,20 @@ export default class ComputerAIAttack {
   }
 
   isComputerAttackTurn(currentPlayerBoard) {
-    return currentPlayerBoard === "playerTwoBoard";
+    return currentPlayerBoard === "playerOneBoard";
   }
 
   computerMakeAttack(game) {
-    const { playerOneBoard } = game;
+    const { playerOneBoard } = game.state;
     let coordinates;
-
+    
     if (this.madeFirstHit) {
       if (this.madeFirstHit && this.madeSecondHit) {
-        const currentFollowingCoordinates = this.attackFollowingTiles(this.followingCoordinates);
+        const currentFollowingCoordinates = this.attackFollowingTiles(
+          this.followingCoordinates
+        );
         this.setCurrentFollowingCoordinates(currentFollowingCoordinates);
+
         const tileName = Object.keys(currentFollowingCoordinates)[0];
         coordinates = currentFollowingCoordinates[tileName];
       } else {
@@ -29,7 +34,7 @@ export default class ComputerAIAttack {
           this.adjacentCoordinates
         );
         this.setCurrentAdjacentCoordinates(currentAdjacentCoordinates);
-        this.setPreviousAdjacentAttacks(currentAdjacentCoordinates);
+        this.removeAdjacentCoordinates(currentAdjacentCoordinates);
         coordinates = currentAdjacentCoordinates.coordinates;
       }
     }
@@ -38,18 +43,21 @@ export default class ComputerAIAttack {
       coordinates = this.attackRandomTile(playerOneBoard);
       this.setFirstHitCoordinates(coordinates);
     }
-
     game.makeAttack(coordinates);
   }
 
   attackRandomTile(playerOneBoard) {
     const coordinates = [];
-    let isMiss = true;
+    let isMiss;
+    let isHit;
+    let isValid = false;
 
-    while (isMiss) {
+    while (!isValid) {
       coordinates[0] = Math.floor(Math.random() * 10);
       coordinates[1] = Math.floor(Math.random() * 10);
       isMiss = this.hasMiss(playerOneBoard, coordinates);
+      isHit = this.hasHit(playerOneBoard, coordinates);
+      isValid = !isMiss && !isHit;
     }
 
     return coordinates;
@@ -58,6 +66,13 @@ export default class ComputerAIAttack {
   hasMiss(playerOneBoard, coordinates) {
     const [y, x] = coordinates;
     return playerOneBoard[y][x] === "M";
+  }
+
+  hasHit(playerOneBoard, coordinates) {
+    const [y, x] = coordinates;
+    const shipPart = playerOneBoard[y][x];
+    if (shipPart instanceof ShipPart) return shipPart.wasHit;
+    return false;
   }
 
   setFirstHitCoordinates(coordinates) {
@@ -71,24 +86,40 @@ export default class ComputerAIAttack {
   setAdjacentCoordinates(coordinates, playerOneBoard) {
     const adjacentCoordinates = {};
     const left = [coordinates[0], coordinates[1] - 1];
-    if (!this.isOffBoard(left) && !this.hasMiss(playerOneBoard, left))
+    if (
+      !this.isOffBoard(left) &&
+      !this.hasMiss(playerOneBoard, left) &&
+      !this.hasHit(playerOneBoard, left)
+    )
       adjacentCoordinates.left = left;
     const right = [coordinates[0], coordinates[1] + 1];
-    if (!this.isOffBoard(right) && !this.hasMiss(playerOneBoard, right))
+    if (
+      !this.isOffBoard(right) &&
+      !this.hasMiss(playerOneBoard, right) &&
+      !this.hasHit(playerOneBoard, right)
+    )
       adjacentCoordinates.right = right;
     const up = [coordinates[0] - 1, coordinates[1]];
-    if (!this.isOffBoard(up) && !this.hasMiss(playerOneBoard, up))
+    if (
+      !this.isOffBoard(up) &&
+      !this.hasMiss(playerOneBoard, up) &&
+      !this.hasHit(playerOneBoard, up)
+    )
       adjacentCoordinates.up = up;
     const down = [coordinates[0] + 1, coordinates[1]];
-    if (!this.isOffBoard(down) && !this.hasMiss(playerOneBoard, down))
+    if (
+      !this.isOffBoard(down) &&
+      !this.hasMiss(playerOneBoard, down) &&
+      !this.hasHit(playerOneBoard, down)
+    )
       adjacentCoordinates.down = down;
 
     this.adjacentCoordinates = adjacentCoordinates;
   }
 
   attackAdjacentTiles(adjacentCoordinates) {
-    const randomNum = Math.floor(Math.random() * 4);
     const tilesNames = Object.keys(adjacentCoordinates);
+    const randomNum = Math.floor(Math.random() * tilesNames.length);
     const chosenTileName = tilesNames[randomNum];
     return {
       tileName: chosenTileName,
@@ -100,11 +131,10 @@ export default class ComputerAIAttack {
     this.currentAdjacentCoordinates = singleAdjacentCoordinate;
   }
 
-  setPreviousAdjacentAttacks({ tileName }) {
-    const hasTileName = this.previousAdjacentAttacks.some(
-      (name) => tileName === name
-    );
-    if (!hasTileName) this.previousAdjacentAttacks.push(tileName);
+  removeAdjacentCoordinates({ tileName }) {
+    const tempCoor = this.adjacentCoordinates;
+    delete tempCoor[tileName];
+    this.adjacentCoordinates = tempCoor;
   }
 
   setMadeSecondHit() {
@@ -123,9 +153,13 @@ export default class ComputerAIAttack {
         const left = [coordinates[0], coordinates[1] - 1];
         const right = [firstHitCoordinates[0], firstHitCoordinates[1] + 1];
         const isLeftValid =
-          !this.isOffBoard(left) && !this.hasMiss(playerOneBoard, left);
+          !this.isOffBoard(left) &&
+          !this.hasMiss(playerOneBoard, left) &&
+          !this.hasHit(playerOneBoard, left);
         const isRightValid =
-          !this.isOffBoard(right) && !this.hasMiss(playerOneBoard, right);
+          !this.isOffBoard(right) &&
+          !this.hasMiss(playerOneBoard, right) &&
+          !this.hasHit(playerOneBoard, right);
         if (isLeftValid) followingCoordinates.left = left;
         if (isRightValid) followingCoordinates.right = right;
         this.followingCoordinates = followingCoordinates;
@@ -135,9 +169,13 @@ export default class ComputerAIAttack {
         const right = [coordinates[0], coordinates[1] + 1];
         const left = [firstHitCoordinates[0], firstHitCoordinates[1] - 1];
         const isRightValid =
-          !this.isOffBoard(right) && !this.hasMiss(playerOneBoard, right);
+          !this.isOffBoard(right) &&
+          !this.hasMiss(playerOneBoard, right) &&
+          !this.hasHit(playerOneBoard, right);
         const isLeftValid =
-          !this.isOffBoard(left) && !this.hasMiss(playerOneBoard, left);
+          !this.isOffBoard(left) &&
+          !this.hasMiss(playerOneBoard, left) &&
+          !this.hasHit(playerOneBoard, left);
         if (isLeftValid) followingCoordinates.left = left;
         if (isRightValid) followingCoordinates.right = right;
         this.followingCoordinates = followingCoordinates;
@@ -148,9 +186,13 @@ export default class ComputerAIAttack {
         const up = [coordinates[0] - 1, coordinates[1]];
         const down = [firstHitCoordinates[0] + 1, firstHitCoordinates[1]];
         const isUpValid =
-          !this.isOffBoard(up) && !this.hasMiss(playerOneBoard, up);
+          !this.isOffBoard(up) &&
+          !this.hasMiss(playerOneBoard, up) &&
+          !this.hasHit(playerOneBoard, up);
         const isDownValid =
-          !this.isOffBoard(down) && !this.hasMiss(playerOneBoard, down);
+          !this.isOffBoard(down) &&
+          !this.hasMiss(playerOneBoard, down) &&
+          !this.hasHit(playerOneBoard, down);
         if (isDownValid) followingCoordinates.down = down;
         if (isUpValid) followingCoordinates.up = up;
         this.followingCoordinates = followingCoordinates;
@@ -161,9 +203,13 @@ export default class ComputerAIAttack {
         const down = [coordinates[0] + 1, coordinates[1]];
         const up = [firstHitCoordinates[0] - 1, firstHitCoordinates[1]];
         const isUpValid =
-          !this.isOffBoard(up) && !this.hasMiss(playerOneBoard, up);
+          !this.isOffBoard(up) &&
+          !this.hasMiss(playerOneBoard, up) &&
+          !this.hasHit(playerOneBoard, up);
         const isDownValid =
-          !this.isOffBoard(down) && !this.hasMiss(playerOneBoard, down);
+          !this.isOffBoard(down) &&
+          !this.hasMiss(playerOneBoard, down) &&
+          !this.hasHit(playerOneBoard, down);
         if (isDownValid) followingCoordinates.down = down;
         if (isUpValid) followingCoordinates.up = up;
         this.followingCoordinates = followingCoordinates;
@@ -176,8 +222,8 @@ export default class ComputerAIAttack {
   }
 
   attackFollowingTiles(followingCoordinates) {
-    const randomNum = Math.floor(Math.random() * 2);
     const tilesNames = Object.keys(followingCoordinates);
+    const randomNum = Math.floor(Math.random() * tilesNames.length);
     const chosenTileName = tilesNames[randomNum];
     return {
       [chosenTileName]: followingCoordinates[chosenTileName],
@@ -190,16 +236,41 @@ export default class ComputerAIAttack {
 
   updateFollowingCoordinates(
     followingCoordinates,
-    currentFollowingCoordinates
+    currentFollowingCoordinates,
+    playerOneBoard
   ) {
     const followCoors = followingCoordinates;
     const tileName = Object.keys(currentFollowingCoordinates)[0];
     const [y, x] = currentFollowingCoordinates[tileName];
-
-    if (tileName === "left") followCoors.left = [y, x - 1];
-    else if (tileName === "right") followCoors.right = [y, x + 1];
-    else if (tileName === "up") followCoors.up = [y - 1, x];
-    else if (tileName === "down") followCoors.down = [y + 1, x];
+    delete followCoors[tileName];
+    if (
+      tileName === "left" &&
+      !this.isOffBoard([y, x - 1]) &&
+      !this.hasMiss(playerOneBoard, [y, x - 1]) &&
+      !this.hasHit(playerOneBoard, [y, x - 1])
+    )
+      followCoors.left = [y, x - 1];
+    else if (
+      tileName === "right" &&
+      !this.isOffBoard([y, x + 1]) &&
+      !this.hasMiss(playerOneBoard, [y, x + 1]) &&
+      !this.hasHit(playerOneBoard, [y, x + 1])
+    )
+      followCoors.right = [y, x + 1];
+    else if (
+      tileName === "up" &&
+      !this.isOffBoard([y - 1, x]) &&
+      !this.hasMiss(playerOneBoard, [y - 1, x]) &&
+      !this.hasHit(playerOneBoard, [y - 1, x])
+    )
+      followCoors.up = [y - 1, x];
+    else if (
+      tileName === "down" &&
+      !this.isOffBoard([y + 1, x]) &&
+      !this.hasMiss(playerOneBoard, [y + 1, x]) &&
+      !this.hasHit(playerOneBoard, [y + 1, x])
+    )
+      followCoors.down = [y + 1, x];
     this.followingCoordinates = followCoors;
   }
 
@@ -229,11 +300,26 @@ export default class ComputerAIAttack {
         this.firstHitCoordinates,
         playerOneBoard
       );
-    } else if (this.madeFirstHit && this.madeSecondHit) {
+    } else if (this.madeFirstHit && this.madeSecondHit)
       this.updateFollowingCoordinates(
         this.followingCoordinates,
-        this.currentFollowingCoordinates
+        this.currentFollowingCoordinates,
+        playerOneBoard
       );
-    }
   };
+
+  isFollowingCoordinatesEmpty() {
+    const folCoor = this.followingCoordinates;
+    return Object.keys(folCoor).length === 0;
+  }
+
+  removeCurrentFollowingCoordinates(
+    followingCoordinates,
+    currentFollowingCoordinates
+  ) {
+    const followCoors = followingCoordinates;
+    const tileName = Object.keys(currentFollowingCoordinates)[0];
+    delete followCoors[tileName];
+    this.followingCoordinates = followCoors;
+  }
 }
