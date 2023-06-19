@@ -27,4 +27,3 @@ The goal of this project, which is a task from the Odin Project, was to create a
 - Learned how to use Jest
 - Realized that I tend to get impatient and make patchy fixes when I am almost finished with a project.
 - Finally used the extend keyward to create a subclass for the first time for the purpose of avoiding bloating in an already densely packed class.
->>>>>>> 2883d1b46aab2703d918d15738807f5042e1b93d
