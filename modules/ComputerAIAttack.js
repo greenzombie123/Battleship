@@ -19,7 +19,7 @@ export default class ComputerAIAttack {
   computerMakeAttack(game) {
     const { playerOneBoard } = game.state;
     let coordinates;
-    
+
     if (this.madeFirstHit) {
       if (this.madeFirstHit && this.madeSecondHit) {
         const currentFollowingCoordinates = this.attackFollowingTiles(
@@ -43,6 +43,8 @@ export default class ComputerAIAttack {
       coordinates = this.attackRandomTile(playerOneBoard);
       this.setFirstHitCoordinates(coordinates);
     }
+    if (coordinates.length === 0 || coordinates === null)
+      coordinates = this.attackRandomTile(playerOneBoard);
     game.makeAttack(coordinates);
   }
 
