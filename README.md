@@ -7,7 +7,7 @@ The goal of this project, which is a task from the Odin Project, was to create a
 # Features
 - Classic Battleship fun!
 - Play with another human or the AI. 
-- AI can place ships on the board as well as attack intelligently.
+- AI can place ships on the board as well as attack intelligently. 
 
 # Tools and Technologies
 - Visual Studio Code
